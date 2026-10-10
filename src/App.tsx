@@ -35,39 +35,56 @@ export default function App() {
     refreshSavedList();
   }, []);
 
-  // Handle URL hash routing (e.g., #declaracao-de-residencia, #validade, #faq)
+  // Handle URL pathname and hash routing (e.g., /declaracao-de-residencia or #declaracao-de-residencia)
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').trim();
-      if (!hash) return;
+    const handleLocationChange = () => {
+      const pathname = window.location.pathname.replace(/^\//, '').trim();
+      const hash = window.location.hash.replace(/^#/, '').trim();
+      const route = pathname || hash;
 
-      if (hash === 'valididade' || hash === 'validity') {
+      if (!route) {
+        setActiveView('models');
+        setSelectedModel(null);
+        document.title = 'Declaração Online - Gerador de Declarações e Documentos';
+        return;
+      }
+
+      if (route === 'valididade' || route === 'validity') {
         setActiveView('validity');
         setSelectedModel(null);
-      } else if (hash === 'como-funciona' || hash === 'how-it-works') {
+        document.title = 'Validade Jurídica (Lei 7.115/83 e Lei 13.726/18) - Declaração Online';
+      } else if (route === 'como-funciona' || route === 'how-it-works') {
         setActiveView('how-it-works');
         setSelectedModel(null);
-      } else if (hash === 'faq' || hash === 'duvidas') {
+        document.title = 'Como Funciona Passo a Passo - Declaração Online';
+      } else if (route === 'faq' || route === 'duvidas') {
         setActiveView('faq');
         setSelectedModel(null);
-      } else if (hash === 'quem-somos' || hash === 'about') {
+        document.title = 'Dúvidas Frequentes e Validade em Cartório - Declaração Online';
+      } else if (route === 'quem-somos' || route === 'about') {
         setActiveView('about');
         setSelectedModel(null);
+        document.title = 'Quem Somos - Declaração Online (Elvis Dias)';
       } else {
-        // Try matching a declaration model slug
+        // Match declaration model slug
         const matched = DECLARATION_MODELS.find(
-          (m) => m.slug === hash || m.id === hash
+          (m) => m.slug === route || m.id === route
         );
         if (matched) {
           setSelectedModel(matched);
           setActiveView('generator');
+          document.title = `${matched.title} - Gerador Oficial em PDF | Declaração Online`;
         }
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleLocationChange();
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   const handleSelectModel = (model: DeclarationModel) => {
@@ -75,7 +92,8 @@ export default function App() {
     setEditingSavedId(undefined);
     setEditingValues(undefined);
     setActiveView('generator');
-    window.location.hash = model.slug;
+    window.history.pushState(null, '', `/${model.slug}`);
+    document.title = `${model.title} - Gerador Oficial em PDF | Declaração Online`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -93,7 +111,8 @@ export default function App() {
       setEditingSavedId(item.id);
       setEditingValues(item.values);
       setActiveView('generator');
-      window.location.hash = matched.slug;
+      window.history.pushState(null, '', `/${matched.slug}`);
+      document.title = `${matched.title} - Editar Cópia | Declaração Online`;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -103,7 +122,8 @@ export default function App() {
     setEditingSavedId(undefined);
     setEditingValues(undefined);
     setActiveView('models');
-    window.location.hash = '';
+    window.history.pushState(null, '', '/');
+    document.title = 'Declaração Online - Gerador de Declarações e Documentos';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

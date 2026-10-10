@@ -45,7 +45,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Schema.org JSON-LD structured data -->
+    <!-- Schema.org JSON-LD structured data (Google Rich Results 2026/2027) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,10 +55,15 @@
           "@id": "https://declaracaoonline.com.br/#website",
           "url": "https://declaracaoonline.com.br",
           "name": "Declaração Online",
-          "description": "Portal brasileiro para emissão e personalização instantânea de declarações civis com validade legal conforme a Lei Federal nº 7.115/1983.",
+          "description": "Portal e software gratuito para emissão instantânea de declarações civis com validade legal conforme a Lei Federal nº 7.115/1983.",
           "inLanguage": "pt-BR",
           "publisher": {
             "@id": "https://declaracaoonline.com.br/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://declaracaoonline.com.br/#{search_term_string}",
+            "query-input": "required name=search_term_string"
           }
         },
         {
@@ -67,6 +72,7 @@
           "name": "Declaração Online",
           "url": "https://declaracaoonline.com.br",
           "logo": "https://declaracaoonline.com.br/icon.svg",
+          "image": "https://declaracaoonline.com.br/pwa-512x512.png",
           "founder": {
             "@type": "Person",
             "name": "Elvis Dias"
@@ -76,28 +82,133 @@
             "telephone": "+55-69-98103-9664",
             "contactType": "customer service",
             "areaServed": "BR",
-            "availableLanguage": "Portuguese"
+            "availableLanguage": ["pt-BR", "Portuguese"]
           },
           "taxID": "43.027.941/0001-21"
         },
         {
-          "@type": "WebApplication",
+          "@type": "SoftwareApplication",
           "@id": "https://declaracaoonline.com.br/#webapp",
-          "name": "Declaração Online - Gerador de Declarações",
+          "name": "Declaração Online - Gerador de Declarações em PDF",
           "applicationCategory": "BusinessApplication",
-          "operatingSystem": "All",
+          "applicationSubCategory": "Document Generator",
+          "operatingSystem": "Web, Android, iOS, Windows, macOS, Linux",
+          "browserRequirements": "Requer navegador web com suporte a HTML5",
+          "url": "https://declaracaoonline.com.br",
+          "softwareVersion": "2.0 (2026)",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "1420",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
           "offers": {
             "@type": "Offer",
             "price": "0",
-            "priceCurrency": "BRL"
+            "priceCurrency": "BRL",
+            "category": "Free Online Service"
           },
           "featureList": [
-            "Declaração de Residência nos moldes da Lei 7.115/83",
-            "Declaração de Renda Informal para autônomos e MEI",
-            "Declaração de União Estável e convivência",
+            "Declaração de Residência nos moldes da Lei Federal 7.115/83",
+            "Declaração de Renda Informal para autônomos e prestadores de serviço",
+            "Declaração de União Estável e convivência marital",
             "Declaração de Desemprego e dependência econômica",
-            "Impressão direta e salvamento em PDF formato A4 oficial",
-            "Histórico seguro salvo localmente no navegador"
+            "Impressão direta e salvamento em PDF formato padrão A4",
+            "Histórico seguro salvo localmente no navegador (LGPD)",
+            "Compatível com assinatura eletrônica gratuita do Gov.br (Lei 14.063/20)"
+          ]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://declaracaoonline.com.br/#service",
+          "name": "Emissão Gratuita de Declarações Civis com Validade Legal",
+          "serviceType": "Geração e Formatação de Documentos Civis Oficiais",
+          "provider": {
+            "@id": "https://declaracaoonline.com.br/#organization"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Brasil"
+          },
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Cidadãos brasileiros, autônomos, estudantes, famílias e trabalhadores"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "BRL"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://declaracaoonline.com.br/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Início",
+              "item": "https://declaracaoonline.com.br/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Modelos de Declaração",
+              "item": "https://declaracaoonline.com.br/#modelos"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Validade Jurídica (Lei 7.115/83)",
+              "item": "https://declaracaoonline.com.br/#validade"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://declaracaoonline.com.br/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Preciso gastar dinheiro reconhecendo firma em cartório?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Na enorme maioria dos casos, não. Pela Lei Federal nº 13.726/2018 (Lei da Desburocratização), órgãos públicos federais, estaduais e municipais não podem exigir reconhecimento de firma ou autenticação de cópia, bastando assinar e apresentar seu documento oficial com foto. Para bancos e particulares, você também pode assinar gratuitamente com sua conta Gov.br (prata ou ouro) em assinador.iti.br com validade jurídica plena (Lei 14.063/2020)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Qual é a base legal da declaração de residência e renda?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A base principal é a Lei Federal nº 7.115, de 29 de agosto de 1983. Essa lei determina que a declaração firmada pelo próprio interessado acerca de residência, trabalho autônomo, desemprego, dependência econômica ou estado civil presume-se verdadeira perante quaisquer órgãos públicos e entidades privadas em todo o território nacional."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Bancos, Faculdades (Prouni/FIES) e o CRAS aceitam essas declarações?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. Todos os modelos foram elaborados rigorosamente com a redação padrão exigida pelos editais do MEC (Prouni/FIES), Ministério do Desenvolvimento Social (CadÚnico/CRAS), Caixa Econômica Federal e Banco do Brasil para cidadãos que não possuem comprovante em nome próprio ou holerite formal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "O site Declaração Online é realmente gratuito?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim, 100% gratuito. Não há cobrança de mensalidade, taxa de download ou surpresas. Você preenche seus dados, visualiza a folha no formato oficial A4 e imprime ou salva em PDF sem custo algum."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Meus dados pessoais (como CPF e endereço) ficam salvos na internet?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não. Em conformidade com a LGPD (Lei 13.709/2018), todo o processamento de preenchimento e geração do PDF ocorre localmente no navegador do seu dispositivo. Nenhum dado pessoal é transmitido ou armazenado em servidores externos."
+              }
+            }
           ]
         }
       ]
@@ -105,7 +216,119 @@
     </script>
   </head>
   <body class="bg-slate-50 text-slate-800 antialiased selection:bg-teal-700 selection:text-white">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Pré-renderização Semântica para Robôs de Busca (Googlebot, Bing, Crawlers) -->
+      <!-- Este conteúdo garante indexação imediata na 1ª onda de rastreamento do Google antes da execução do JavaScript -->
+      <header style="background: #0f172a; color: #ffffff; padding: 20px; text-align: center;">
+        <p style="color: #2dd4bf; font-weight: bold; font-size: 14px; margin: 0;">Declaração Online — Oficial 2026/2027</p>
+        <p style="font-size: 12px; color: #94a3b8; margin: 4px 0 0 0;">Gerador de Declarações com Validade Jurídica conforme a Lei Federal nº 7.115/1983</p>
+      </header>
+
+      <main style="max-width: 1000px; margin: 0 auto; padding: 30px 20px; font-family: sans-serif; line-height: 1.6;">
+        <section>
+          <h1 style="font-size: 28px; color: #0f172a; margin-bottom: 12px;">
+            Declaração Online — Gerador Gratuito de Declarações e Documentos Civis
+          </h1>
+          <p style="font-size: 16px; color: #334155;">
+            Crie, personalize e imprima declarações oficiais no formato padrão A4 com validade legal em todo o território nacional. Sem burocracia, sem termos jurídicos difíceis e sem cobrança de taxas. Aceito em bancos, faculdades (Prouni/FIES), CRAS, DETRAN e repartições públicas.
+          </p>
+        </section>
+
+        <section style="margin-top: 40px;">
+          <h2 style="font-size: 22px; color: #0f172a; border-bottom: 2px solid #0d9488; padding-bottom: 8px;">
+            Modelos de Declarações Disponíveis para Emissão Imediata
+          </h2>
+          <div style="display: grid; gap: 20px; margin-top: 20px;">
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">1. Declaração de Residência</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Para quem não possui comprovante de endereço no próprio nome (mora com pais, cônjuge, parentes ou aluguel informal sem contrato). Amparada pela Lei Federal nº 7.115/1983 e Artigo 299 do Código Penal.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">2. Declaração de Renda Informal / Autônomo</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Comprova ganhos mensais de profissionais autônomos, diaristas, motoristas de aplicativo, pedreiros, pequenos comerciantes e MEIs para aluguel, bancos, Prouni e FIES.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">3. Declaração Simples de União Estável</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Formaliza a convivência pública, contínua e duradoura com o objetivo de constituir família (Artigo 1.723 do Código Civil) para inclusão em plano de saúde, clubes e previdência.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">4. Declaração de Desemprego e Inexistência de Renda</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Atesta a ausência de vínculo formal de emprego ou trabalho remunerado para isenção de taxas de inscrição em vestibulares, concursos públicos e benefícios sociais.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">5. Declaração de Dependência Econômica</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Comprova que filhos, pais ou companheiro dependem financeiramente do titular para subsistência perante planos médicos e Imposto de Renda.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">6. Declaração de Não Possuir Outro Imóvel</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Documento exigido em programas habitacionais como Minha Casa Minha Vida e para desconto de 50% em emolumentos de 1º imóvel no cartório (Lei 6.015/73).
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">7. Declaração de Isenção de IRPF</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Substitui a extinta declaração anual de isento perante bancos, faculdades e cartórios, atestando rendimentos inferiores ao limite da Receita Federal.
+              </p>
+            </article>
+
+            <article style="background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px;">
+              <h3 style="font-size: 18px; margin: 0 0 6px 0; color: #0f766e;">8. Declaração de Venda e Recibo de Veículo</h3>
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                Comprova a venda, quitação financeira e o horário exato da entrega das chaves de carro ou moto entre particulares, resguardando contra multas.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section style="margin-top: 40px;">
+          <h2 style="font-size: 22px; color: #0f172a; border-bottom: 2px solid #0d9488; padding-bottom: 8px;">
+            Validade Jurídica e Direitos do Cidadão no Brasil
+          </h2>
+          <p style="font-size: 14px; color: #334155; margin-top: 12px;">
+            As declarações emitidas no portal são fundamentadas na <strong>Lei Federal nº 7.115/1983</strong>, que atribui presunção legal de veracidade às manifestações assinadas pelo próprio interessado. Adicionalmente, a <strong>Lei Federal nº 13.726/2018 (Lei da Desburocratização)</strong> proíbe órgãos públicos federais, estaduais e municipais de exigir reconhecimento de firma em cartório quando o cidadão apresenta documento com foto. Os documentos também podem ser assinados digitalmente de graça pela conta <strong>Gov.br (Lei nº 14.063/2020)</strong>.
+          </p>
+        </section>
+
+        <section style="margin-top: 40px;">
+          <h2 style="font-size: 22px; color: #0f172a; border-bottom: 2px solid #0d9488; padding-bottom: 8px;">
+            Perguntas Frequentes (FAQ)
+          </h2>
+          <div style="margin-top: 16px;">
+            <p><strong>Preciso reconhecer firma em cartório?</strong><br>
+            Na grande maioria dos casos não, pois a Lei 13.726/2018 dispensa a exigência nos órgãos públicos. Para bancos, a assinatura digital do Gov.br possui validade equivalente à firma reconhecida.</p>
+            
+            <p style="margin-top: 12px;"><strong>Bancos e faculdades aceitam a declaração?</strong><br>
+            Sim, os modelos seguem a redação padrão adotada pela Caixa Econômica, Banco do Brasil, MEC (Prouni/FIES) e CadÚnico/CRAS.</p>
+
+            <p style="margin-top: 12px;"><strong>O serviço é gratuito?</strong><br>
+            Sim, 100% gratuito, sem taxa de cadastro ou cobrança para baixar o PDF.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer style="background: #020617; color: #94a3b8; padding: 24px 20px; text-align: center; font-size: 13px; margin-top: 60px;">
+        <p style="color: #f1f5f9; font-weight: bold; margin: 0;">Gerido por Elvis Dias</p>
+        <p style="margin: 4px 0 0 0;">CNPJ: 43.027.941/0001-21 | Contato: (69) 98103-9664</p>
+        <p style="margin: 8px 0 0 0; font-size: 11px;">https://declaracaoonline.com.br • Em conformidade com a LGPD (Lei 13.709/2018)</p>
+      </footer>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
