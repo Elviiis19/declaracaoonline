@@ -1,0 +1,8 @@
+{
+  "name": "Declaração Online - Gerador de Declarações e Documentos",
+  "description": "Gerador gratuito de declarações com validade jurídica (Lei nº 7.115/83). Modelos de residência, renda autônomo, união estável, desemprego, dependência econômica e mais. Imprima ou salve em PDF direto no navegador.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
