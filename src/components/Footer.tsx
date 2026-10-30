@@ -222,10 +222,50 @@ export const Footer: React.FC<FooterProps> = ({ onOpenInstitutional, onSelectMod
               </li>
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-autorizacao-de-viagem-hospedagem-menor')}
+                  onClick={() => onSelectModelSlug?.('autorizacao-de-hospedagem-de-menor')}
                   className="hover:text-teal-400 transition text-left"
                 >
-                  Autorização de Viagem de Menor
+                  Hospedagem de Menor (ECA)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-homonimia')}
+                  className="hover:text-teal-400 transition text-left text-teal-300 font-medium"
+                >
+                  Declaração de Homonímia
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-coabitacao')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Coabitação (CadÚnico/Prouni)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-acumulo-de-cargos')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Não Acúmulo de Cargos Públicos
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-indicacao-de-condutor-infrator')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Indicação de Condutor Infrator
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-dispensa-de-vale-transporte')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Dispensa de Vale-Transporte
                 </button>
               </li>
             </ul>

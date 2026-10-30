@@ -30,7 +30,21 @@ export function maskCurrency(value: string): string {
   });
 }
 
-export function formatBrazilianDate(date: Date = new Date()): string {
+export function formatBrazilianDate(dateInput: Date | string = new Date()): string {
+  let date: Date;
+  if (typeof dateInput === 'string') {
+    if (!dateInput) return '';
+    if (dateInput.includes('-')) {
+      const parts = dateInput.split('-').map(Number);
+      date = new Date(parts[0], (parts[1] || 1) - 1, parts[2] || 1);
+    } else {
+      date = new Date(dateInput);
+    }
+  } else {
+    date = dateInput;
+  }
+  if (isNaN(date.getTime())) return String(dateInput);
+
   const day = date.getDate().toString().padStart(2, '0');
   const months = [
     'janeiro',

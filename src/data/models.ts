@@ -1629,6 +1629,441 @@ export const DECLARATION_MODELS: DeclarationModel[] = [
         answer: 'Sim! A declaração atesta o fato do trabalho e horário cumprido pelo trabalhador, servindo perante creches, escolas e juizados mesmo quando a carteira ainda está em fase de homologação.'
       }
     ]
+  },
+  {
+    id: 'homonimia',
+    slug: 'declaracao-de-homonimia',
+    title: 'Declaração de Homonímia',
+    shortTitle: 'Homonímia',
+    category: 'geral',
+    badge: 'Lei 7.115/83',
+    description:
+      'Serve para quem possui o mesmo nome de um devedor, réu ou condenado e está sofrendo restrições indevidas no CPF perante bancos, SPC/Serasa, cartórios ou concursos.',
+    whenToUse:
+      'Utilize quando seu nome for confundido com o de outra pessoa (homônimo) que possui dívidas, protestos em cartório ou processos judiciais em que você não é parte.',
+    legalBase: 'Lei Federal nº 7.115, de 29 de agosto de 1983 e Artigo 299 do Código Penal Brasileiro.',
+    fields: [
+      { id: 'nome', label: 'Seu Nome Completo (Declarante)', type: 'text', placeholder: 'Ex: José da Silva Santos', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'Seu CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'Seu RG / Órgão Emissor', type: 'text', placeholder: 'Ex: 1.234.567 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nacionalidade', label: 'Nacionalidade', type: 'text', placeholder: 'brasileiro(a)', defaultValue: 'brasileiro(a)', required: true, gridSpan: 'half' },
+      { id: 'estadoCivil', label: 'Estado Civil', type: 'select', options: [
+        { value: 'solteiro(a)', label: 'Solteiro(a)' },
+        { value: 'casado(a)', label: 'Casado(a)' },
+        { value: 'em união estável', label: 'União Estável' },
+        { value: 'divorciado(a)', label: 'Divorciado(a)' },
+        { value: 'viúvo(a)', label: 'Viúvo(a)' }
+      ], defaultValue: 'solteiro(a)', required: true, gridSpan: 'half' },
+      { id: 'filiacaoMae', label: 'Nome Completo da sua Mãe', type: 'text', placeholder: 'Ex: Maria José da Silva', required: true, gridSpan: 'full' },
+      { id: 'filiacaoPai', label: 'Nome Completo do seu Pai', type: 'text', placeholder: 'Ex: Antônio dos Santos', required: false, gridSpan: 'full' },
+      { id: 'dataNascimento', label: 'Sua Data de Nascimento', type: 'date', required: true, gridSpan: 'half' },
+      { id: 'entidadeDestino', label: 'Órgão / Empresa onde consta a restrição indevida', type: 'text', placeholder: 'Ex: Serasa Experian / Cartório do 1º Ofício / Banco do Brasil', required: true, gridSpan: 'half' },
+      { id: 'dadosHomonimo', label: 'Identificação da Restrição / Processo Indevido', type: 'textarea', placeholder: 'Ex: Apontamento de débito nº 12345/2023 no valor de R$ 1.500,00 registrado indevidamente sob nome homônimo.', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE HOMONÍMIA',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, nacionalidade ${v.nacionalidade || 'brasileira'}, estado civil ${v.estadoCivil || 'solteiro(a)'}, nascido(a) em ${v.dataNascimento ? formatBrazilianDate(v.dataNascimento) : '__/__/____'}, filho(a) de ${v.filiacaoMae || '______________________'}${v.filiacaoPai ? ` e de ${v.filiacaoPai}` : ''}, portador(a) da cédula de identidade RG nº ${v.rg || '____________'} e inscrito(a) no CPF sob o nº ${v.cpf || '___________'}, residente e domiciliado(a) na cidade de ${city} - ${uf},`,
+          `DECLARO, sob as penas da Lei, para todos os fins de direito e em conformidade estrita com a Lei Federal nº 7.115, de 29 de agosto de 1983, perante ${v.entidadeDestino || 'o órgão/empresa competente'}, que:`,
+          `NÃO SOU A PESSOA envolvida ou responsável pela seguinte restrição, pendência financeira, processo judicial ou título protestado:`,
+          `>> DETALHES DO APONTAMENTO DO HOMÔNIMO: "${v.dadosHomonimo || 'Registro indevido decorrente de homonímia com terceira pessoa'}"`,
+          `Declaro categoricamente que se trata de manifesto caso de HOMONÍMIA (pessoas que possuem o mesmo prenome e sobrenome), não existindo qualquer relação jurídica, comercial, contratual ou pessoal entre a minha pessoa e o débito/fato indicado.`,
+          `Declaro estar plenamente ciente de que a falsidade na presente declaração configurará crime de falsidade ideológica, previsto no Artigo 299 do Código Penal Brasileiro, ensejando a devida responsabilização civil e criminal.`,
+          `Por ser a fiel expressão da verdade, firmo e dato o presente instrumento para que produza os seus legais e jurídicos efeitos.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Declarante', document: `CPF: ${v.cpf || '000.000.000-00'} | RG: ${v.rg || 'Documento'}`, role: 'Declarante (Afetado por Homonímia)' }
+        ],
+        notes: 'Fundamentada na Lei Federal nº 7.115/1983. Presume-se verdadeira a declaração de homonímia firmada pelo próprio interessado.'
+      };
+    },
+    faqs: [
+      {
+        question: 'O que é uma declaração de homonímia?',
+        answer: 'É o documento oficial pelo qual o cidadão declara, sob as penas da lei, que não é a pessoa homônima (com o mesmo nome) que praticou infrações, possui cheques sem fundos, dívidas ativas ou processos judiciais.'
+      },
+      {
+        question: 'A declaração de homonímia é aceita em bancos e cadastros de crédito?',
+        answer: 'Sim! Com base na Lei 7.115/1983, órgãos de proteção ao crédito (como Serasa e SPC), cartórios de protesto e instituições financeiras aceitam a declaração acompanhada de cópia de documentos que demonstrem a divergência de filiação, data de nascimento ou CPF.'
+      }
+    ]
+  },
+  {
+    id: 'coabitacao',
+    slug: 'declaracao-de-coabitacao',
+    title: 'Declaração de Coabitação e Composição Familiar',
+    shortTitle: 'Coabitação e Família',
+    category: 'residencia',
+    badge: 'CadÚnico e Prouni',
+    description:
+      'Comprova quem são os membros que vivem na mesma casa e formam o grupo familiar, essencial para concessão de bolsas no ProUni, FIES, CadÚnico e programas sociais.',
+    whenToUse:
+      'Utilize em universidades para concessão de bolsas Prouni/FIES, ou em órgãos de assistência social (CRAS, CadÚnico, Auxílio Brasil) para comprovar quem mora na casa e a renda por pessoa.',
+    legalBase: 'Lei Federal nº 7.115/1983, Lei nº 8.742/1993 (LOAS) e Decreto nº 6.135/2007.',
+    fields: [
+      { id: 'nomeResponsavel', label: 'Nome do Responsável Familiar (Declarante)', type: 'text', placeholder: 'Ex: Sandra Regina de Souza', required: true, gridSpan: 'full' },
+      { id: 'cpfResponsavel', label: 'CPF do Responsável', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgResponsavel', label: 'RG do Responsável', type: 'text', placeholder: 'Ex: 123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'logradouro', label: 'Endereço da Residência Familiar', type: 'text', placeholder: 'Rua das Camélias, nº 120, Bairro Esperança', required: true, gridSpan: 'full' },
+      { id: 'finalidade', label: 'Finalidade da Comprovação', type: 'select', options: [
+        { value: 'processo seletivo de bolsa de estudos ProUni / FIES', label: 'Bolsa Prouni / FIES' },
+        { value: 'inscrição e atualização no CadÚnico / CRAS / Programas Sociais', label: 'CadÚnico / CRAS / Benefícios Sociais' },
+        { value: 'isenção de taxa em vestibulares e concursos públicos', label: 'Isenção de Taxa de Concurso / Vestibular' },
+        { value: 'fins gerais de comprovação de grupo familiar', label: 'Outros fins gerais' }
+      ], defaultValue: 'processo seletivo de bolsa de estudos ProUni / FIES', required: true, gridSpan: 'full' },
+      { id: 'membrosFamilia', label: 'Relação dos Moradores (Nome, Parentesco, Idade e Ocupação/Renda)', type: 'textarea', placeholder: '1. Sandra Regina de Souza (Mãe, 45 anos, Costureira, R$ 1.500,00)\n2. Lucas de Souza Lima (Filho, 19 anos, Estudante, R$ 0,00)\n3. Mariana de Souza Lima (Filha, 12 anos, Estudante, R$ 0,00)', required: true, gridSpan: 'full' },
+      { id: 'rendaTotal', label: 'Renda Bruta Familiar Total Somada (R$)', type: 'currency', placeholder: 'R$ 1.500,00', required: true, gridSpan: 'half' },
+      { id: 'totalMembros', label: 'Número Total de Pessoas que Moram na Casa', type: 'number', placeholder: '3', defaultValue: '3', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE COABITAÇÃO E COMPOSIÇÃO FAMILIAR',
+        body: [
+          `Eu, ${v.nomeResponsavel || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfResponsavel || '___________'} e portador(a) do RG nº ${v.rgResponsavel || '____________'}, na qualidade de Responsável pela Unidade Familiar, residente e domiciliado(a) na ${v.logradouro || 'endereço da residência'}, ${city} - ${uf},`,
+          `DECLARO, para os devidos fins de comprovação perante a comissão examinadora de ${v.finalidade || 'processo seletivo e cadastral'}, sob as penas da Lei Federal nº 7.115/1983 e do Artigo 299 do Código Penal, que o meu grupo familiar é composto por ${v.totalMembros || '___'} pessoa(s) que coabitam sob o mesmo teto e compartilham despesas, conforme relação detalhada a seguir:`,
+          `>> MEMBROS DO GRUPO FAMILIAR COABITANTE:`,
+          `${v.membrosFamilia || '1. Declarante e demais dependentes que residem no imóvel.'}`,
+          `Declaro ainda que a Renda Bruta Mensal Total do grupo familiar somado corresponde a ${v.rendaTotal || 'R$ 0,00'}, correspondendo exatamente à realidade socioeconômica da família.`,
+          `Declaro estar ciente de que a omissão de membros familiares ou a prestação de informações inverídicas implicará o cancelamento imediato de eventuais benefícios/bolsas obtidos, sem prejuízo da responsabilização civil e criminal cabível.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeResponsavel || 'Nome do Responsável Familiar', document: `CPF: ${v.cpfResponsavel || '000.000.000-00'}`, role: 'Declarante / Responsável Familiar' }
+        ],
+        notes: 'Documento regulamentado pela Lei nº 7.115/1983. Presume-se verdadeira a composição familiar informada pelo titular sob responsabilidade legal.'
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem deve assinar a declaração de coabitação?',
+        answer: 'Deve ser assinada pelo chefe ou responsável familiar (ou pelo próprio estudante/candidato maior de idade que está prestando as informações para a faculdade ou órgão assistencial).'
+      },
+      {
+        question: 'A declaração é aceita no Prouni quando não há certidão de nascimento de parentes?',
+        answer: 'Sim! As portarias normativas do MEC autorizam a comprovação de membros do grupo familiar e união estável mediante declaração escrita assinada pelo candidato ou seu representante legal.'
+      }
+    ]
+  },
+  {
+    id: 'acumulo-cargos',
+    slug: 'declaracao-de-acumulo-de-cargos',
+    title: 'Declaração de Não Acúmulo de Cargos Públicos',
+    shortTitle: 'Acúmulo de Cargos',
+    category: 'trabalho',
+    badge: 'Concurso Público',
+    description:
+      'Documento obrigatório na posse de cargos públicos civis ou militares para atestar o cumprimento do Art. 37, XVI da Constituição Federal sobre acumulação remunerada.',
+    whenToUse:
+      'Obrigatória na entrega de documentos para posse em concursos públicos municipais, estaduais ou federais.',
+    legalBase: 'Artigo 37, incisos XVI e XVII da Constituição Federal de 1988 e Lei Federal nº 8.112/1990.',
+    fields: [
+      { id: 'nomeServidor', label: 'Nome Completo do Convocado/Servidor', type: 'text', placeholder: 'Ex: Rafael Henrique de Oliveira', required: true, gridSpan: 'full' },
+      { id: 'cpfServidor', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgServidor', label: 'RG / Órgão Emissor', type: 'text', placeholder: 'Ex: 456789 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'cargoPretendido', label: 'Cargo / Função em que está tomando Posse', type: 'text', placeholder: 'Ex: Técnico Judiciário / Professor de Ensino Fundamental', required: true, gridSpan: 'half' },
+      { id: 'orgaoPretendido', label: 'Órgão / Ente Público Contratante', type: 'text', placeholder: 'Ex: Tribunal de Justiça do Estado de Rondônia / Prefeitura Municipal', required: true, gridSpan: 'half' },
+      { id: 'situacaoAcumulo', label: 'Situação de Acumulação', type: 'select', options: [
+        { value: 'não exerço e não acumulo nenhum outro cargo, emprego ou função pública remunerada em âmbito federal, estadual ou municipal, nem percebo proventos de inatividade inacumuláveis', label: 'NÃO ACUMULO nenhum outro cargo ou função pública (Padrão)' },
+        { value: 'acumulo licitamente outro cargo amparado pelas alíneas do Art. 37, XVI da CF/88 (dois cargos de professor, ou um de professor com outro técnico/científico, ou dois cargos da saúde)', label: 'ACUMULO LICITAMENTE (Dois de professor / Saúde / Técnico-científico)' }
+      ], defaultValue: 'não exerço e não acumulo nenhum outro cargo, emprego ou função pública remunerada em âmbito federal, estadual ou municipal, nem percebo proventos de inatividade inacumuláveis', required: true, gridSpan: 'full' },
+      { id: 'detalhesCargo2', label: 'Caso acumule licitamente, informe órgão, cargo e horários', type: 'textarea', placeholder: 'Ex: Cargo de Professor na SEDUC-RO, 20h semanais no turno matutino, com compatibilidade integral de horários com o cargo da posse.', required: false, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE NÃO ACÚMULO DE CARGOS PÚBLICOS',
+        body: [
+          `Eu, ${v.nomeServidor || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfServidor || '___________'} e portador(a) da cédula de identidade RG nº ${v.rgServidor || '____________'}, convocado(a) para tomar posse e entrar em exercício no cargo de ${v.cargoPretendido || '__________________'} perante ${v.orgaoPretendido || 'o Órgão Público Competente'},`,
+          `DECLARO, para os devidos fins de atendimento aos requisitos de investidura previstos no Artigo 37, incisos XVI e XVII da Constituição Federal de 1988 e legislação estatutária aplicável, sob as penas da Lei e da responsabilidade administrativa e funcional, que:`,
+          `>> SITUAÇÃO FUNCIONAL: ${v.situacaoAcumulo || 'Não exerço e não acumulo nenhum outro cargo, emprego ou função pública remunerada.'}`,
+          v.detalhesCargo2 ? `>> DETALHAMENTO DA ACUMULAÇÃO LÍCITA / COMPATIBILIDADE: ${v.detalhesCargo2}` : `Declaro expressamente que não ocupo outro cargo, emprego ou função pública na Administração Pública Direta ou Indireta da União, dos Estados, do Distrito Federal ou dos Municípios, incluindo autarquias, fundações, empresas públicas e sociedades de economia mista, nem percebo benefício de aposentadoria inacumulável.`,
+          `Declaro ter pleno conhecimento de que prestar declaração falsa perante a Administração Pública configurará ato ilícito grave, acarretando a nulidade do ato de posse e apuração nos termos do Artigo 299 do Código Penal (Falsidade Ideológica) e da Lei de Improbidade Administrativa.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeServidor || 'Nome do Servidor / Convocado', document: `CPF: ${v.cpfServidor || '000.000.000-00'}`, role: `Candidato(a) ao cargo de ${v.cargoPretendido || 'Servidor Público'}` }
+        ],
+        notes: 'Em conformidade com a Constituição Federal de 1988 e Lei nº 8.112/1990.'
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem é obrigado a apresentar essa declaração?',
+        answer: 'Todos os cidadãos aprovados em concursos públicos civis ou militares para posse em prefeituras, governos estaduais, tribunais e autarquias federais.'
+      },
+      {
+        question: 'Professor ou médico pode acumular dois cargos públicos?',
+        answer: 'Sim! A Constituição Federal permite excepcionalmente o acúmulo de: dois cargos de professor; um cargo de professor com outro técnico ou científico; ou dois cargos privativos de profissionais de saúde com profissões regulamentadas, desde que haja compatibilidade de horários.'
+      }
+    ]
+  },
+  {
+    id: 'hospedagem-menor',
+    slug: 'autorizacao-de-hospedagem-de-menor',
+    title: 'Autorização de Hospedagem de Menores',
+    shortTitle: 'Hospedagem de Menor',
+    category: 'familia',
+    badge: 'ECA - Lei 8.069/90',
+    description:
+      'Autorização formal assinada pelos pais ou responsáveis legais para que menores de 18 anos possam se hospedar em hotéis, pousadas ou resorts acompanhados de terceiros ou parentes.',
+    whenToUse:
+      'Exigida por hotéis e pousadas quando a criança ou adolescente viaja e vai se hospedar com avós, tios, irmãos maiores, amigos da família ou excursão.',
+    legalBase: 'Artigo 82 da Lei Federal nº 8.069, de 13 de julho de 1990 (Estatuto da Criança e do Adolescente - ECA).',
+    fields: [
+      { id: 'nomePaiOuMae', label: 'Nome do Pai, Mãe ou Responsável Legal', type: 'text', placeholder: 'Ex: Luciana Alves Ferreira', required: true, gridSpan: 'full' },
+      { id: 'cpfPaiOuMae', label: 'CPF do Responsável', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgPaiOuMae', label: 'RG do Responsável', type: 'text', placeholder: 'Ex: 123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'grauParentesco', label: 'Grau de Parentesco com o Menor', type: 'select', options: [
+        { value: 'mãe', label: 'Mãe' },
+        { value: 'pai', label: 'Pai' },
+        { value: 'tutor(a) / guardião(ã) legal', label: 'Tutor / Guardião Legal' }
+      ], defaultValue: 'mãe', required: true, gridSpan: 'half' },
+      { id: 'nomeMenor', label: 'Nome Completo da Criança / Adolescente (Menor)', type: 'text', placeholder: 'Ex: Arthur Alves Ferreira', required: true, gridSpan: 'half' },
+      { id: 'documentoMenor', label: 'RG ou Certidão de Nascimento do Menor', type: 'text', placeholder: 'Ex: RG 789456 SSP/RO ou Certidão Termo 12345', required: true, gridSpan: 'half' },
+      { id: 'dataNascMenor', label: 'Data de Nascimento do Menor', type: 'date', required: true, gridSpan: 'half' },
+      { id: 'nomeAcompanhante', label: 'Nome Completo do Adulto que Irá Acompanhar', type: 'text', placeholder: 'Ex: Valéria Alves Ferreira (Tia)', required: true, gridSpan: 'full' },
+      { id: 'cpfAcompanhante', label: 'CPF do Acompanhante', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgAcompanhante', label: 'RG do Acompanhante', type: 'text', placeholder: 'Ex: 654321 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'estabelecimentoHospedagem', label: 'Nome do Hotel / Pousada / Estabelecimento', type: 'text', placeholder: 'Ex: Hotel Pousada das Águas / Qualquer estabelecimento no destino', required: true, gridSpan: 'full' },
+      { id: 'periodoHospedagem', label: 'Período da Hospedagem', type: 'text', placeholder: 'Ex: De 15/07/2026 a 22/07/2026', defaultValue: 'Período da referida viagem', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'AUTORIZAÇÃO DE HOSPEDAGEM DE MENOR',
+        body: [
+          `Eu, ${v.nomePaiOuMae || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfPaiOuMae || '___________'} e portador(a) do RG nº ${v.rgPaiOuMae || '____________'}, na qualidade de ${v.grauParentesco || 'responsável legal'},`,
+          `AUTORIZO, com fundamento expresso no Artigo 82 da Lei Federal nº 8.069/1990 (Estatuto da Criança e do Adolescente - ECA), a hospedagem de meu(minha) filho(a) / tutelado(a):`,
+          `>> MENOR: ${v.nomeMenor || '_______________________'}, nascido(a) em ${v.dataNascMenor ? formatBrazilianDate(v.dataNascMenor) : '__/__/____'}, portador(a) do documento nº ${v.documentoMenor || 'RG/Certidão'},`,
+          `Para que possa se hospedar no estabelecimento: ${v.estabelecimentoHospedagem || 'estabelecimento hoteleiro'}, durante o período de: ${v.periodoHospedagem || 'vigência da viagem'}, DEVIDAMENTE ACOMPANHADO(A) do(a) seguinte adulto responsável:`,
+          `>> ACOMPANHANTE AUTORIZADO(A): ${v.nomeAcompanhante || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfAcompanhante || '___________'} e RG nº ${v.rgAcompanhante || '____________'}.`,
+          `O(A) acompanhante ora indicado(a) fica investido(a) de poderes para zelar pela integridade, bem-estar e segurança do(a) menor durante toda a permanência no estabelecimento.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomePaiOuMae || 'Nome do Pai / Mãe ou Responsável Legal', document: `CPF: ${v.cpfPaiOuMae || '000.000.000-00'}`, role: `Responsável Legal (${v.grauParentesco || 'Pai/Mãe'})` }
+        ],
+        notes: 'Obrigatória conforme o Art. 82 do Estatuto da Criança e do Adolescente (ECA). Hotéis são proibidos por lei de hospedar menores sem autorização expressa.'
+      };
+    },
+    faqs: [
+      {
+        question: 'O hotel pode recusar a hospedagem se não tiver essa autorização?',
+        answer: 'Sim! O Artigo 82 do Estatuto da Criança e do Adolescente proíbe expressamente a hospedagem de crianças ou adolescentes desacompanhados dos pais ou sem autorização expressa destes, sob pena de multa pesada e interdição do hotel.'
+      },
+      {
+        question: 'A autorização pode ser assinada digitalmente pelo Gov.br?',
+        answer: 'Sim! Hotéis aceitam a autorização impressa ou assinada digitalmente com a conta Gov.br com validade jurídica garantida pela Lei 14.063/2020.'
+      }
+    ]
+  },
+  {
+    id: 'infracao-condutor',
+    slug: 'declaracao-de-indicacao-de-condutor-infrator',
+    title: 'Declaração de Indicação de Condutor Infrator e Responsabilidade por Multas',
+    shortTitle: 'Condutor Infrator',
+    category: 'bens',
+    badge: 'DETRAN e Multas',
+    description:
+      'Transfere formalmente a pontuação na CNH e a responsabilidade pelo pagamento de infração de trânsito para a pessoa que estava efetivamente na direção do veículo.',
+    whenToUse:
+      'Utilize perante o DETRAN, PRF ou órgão municipal de trânsito quando outra pessoa cometeu a infração dirigindo seu carro/moto.',
+    legalBase: 'Artigo 257, § 7º da Lei Federal nº 9.503/1997 (Código de Trânsito Brasileiro - CTB).',
+    fields: [
+      { id: 'nomeProprietario', label: 'Nome do Proprietário do Veículo', type: 'text', placeholder: 'Ex: Marcos Vinícius Teixeira', required: true, gridSpan: 'full' },
+      { id: 'cpfProprietario', label: 'CPF do Proprietário', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgProprietario', label: 'RG do Proprietário', type: 'text', placeholder: 'Ex: 987654 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'placaVeiculo', label: 'Placa do Veículo', type: 'text', placeholder: 'Ex: ABC-1234 ou ABC1D23', required: true, gridSpan: 'half' },
+      { id: 'renavamVeiculo', label: 'Número do RENAVAM', type: 'text', placeholder: 'Ex: 00123456789', required: true, gridSpan: 'half' },
+      { id: 'marcaModelo', label: 'Marca / Modelo do Veículo', type: 'text', placeholder: 'Ex: Chevrolet Onix 1.0', required: true, gridSpan: 'full' },
+      { id: 'autoInfracao', label: 'Número do Auto de Infração / Notificação', type: 'text', placeholder: 'Ex: A012345678', required: true, gridSpan: 'half' },
+      { id: 'dataInfracao', label: 'Data e Hora da Infração', type: 'text', placeholder: 'Ex: 14/05/2026 às 15h30', required: true, gridSpan: 'half' },
+      { id: 'nomeCondutor', label: 'Nome do Real Condutor Infrator (Quem Dirigia)', type: 'text', placeholder: 'Ex: Thiago Fernandes Silva', required: true, gridSpan: 'full' },
+      { id: 'cpfCondutor', label: 'CPF do Condutor Infrator', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'cnhCondutor', label: 'Número da CNH do Condutor Infrator', type: 'text', placeholder: 'Ex: 01234567890 (Registro CNH)', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE INDICAÇÃO DE REAL CONDUTOR INFRATOR',
+        body: [
+          `Pelo presente instrumento particular, o(a) Sr.(a) ${v.nomeProprietario || 'NOME DO PROPRIETÁRIO'}, inscrito(a) no CPF sob o nº ${v.cpfProprietario || '___________'} e RG nº ${v.rgProprietario || '____________'}, na qualidade de LEGÍTIMO(A) PROPRIETÁRIO(A) do veículo automotor:`,
+          `>> VEÍCULO: ${v.marcaModelo || 'Marca/Modelo'}, Placa: ${v.placaVeiculo || 'PLACA'}, RENAVAM nº ${v.renavamVeiculo || '00000000000'},`,
+          `DECLARA, com amparo no Artigo 257, § 7º da Lei Federal nº 9.503/1997 (Código de Trânsito Brasileiro - CTB) e resoluções do CONTRAN, perante a autoridade de trânsito competente, que na data de ${v.dataInfracao || '__/__/____'}, por ocasião do Auto de Infração nº ${v.autoInfracao || '__________'}, NÃO ESTAVA na condução do referido veículo.`,
+          `E eu, ${v.nomeCondutor || 'NOME DO CONDUTOR INFRATOR'}, inscrito(a) no CPF sob o nº ${v.cpfCondutor || '___________'} e portador(a) da CNH de Registro nº ${v.cnhCondutor || '__________'}, DECLARO QUE ERA O(A) REAL CONDUTOR(A) do veículo no momento da autuação, ASSUMINDO TOTAL RESPONSABILIDADE pelo cômputo dos pontos decorrentes da infração na minha Carteira Nacional de Habilitação, bem como pelos encargos pecuniários incidentes.`,
+          `Ambas as partes declaram estar cientes de que a indicação falsa de condutor configura crime de falsidade ideológica (Art. 299 do Código Penal), com pena de reclusão de 1 a 5 anos e multa.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeProprietario || 'Proprietário do Veículo', document: `CPF: ${v.cpfProprietario || '000.000.000-00'}`, role: 'Proprietário do Veículo' },
+          { name: v.nomeCondutor || 'Condutor Infrator', document: `CPF: ${v.cpfCondutor || '000.000.000-00'} | CNH: ${v.cnhCondutor || '00000000000'}`, role: 'Real Condutor Infrator' }
+        ],
+        notes: 'Fundamentada no Art. 257, § 7º do Código de Trânsito Brasileiro (CTB). Exige a assinatura tanto do proprietário quanto do condutor indicado.'
+      };
+    },
+    faqs: [
+      {
+        question: 'Qual é o prazo para indicar o condutor infrator no DETRAN?',
+        answer: 'O prazo legal é de 30 (trinta) dias corridos contados a partir da data de notificação da autuação, conforme estipulado pelo Código de Trânsito Brasileiro.'
+      },
+      {
+        question: 'Precisa da assinatura das duas pessoas?',
+        answer: 'Sim! Para ter validade perante os órgãos de trânsito (DETRAN, Polícia Rodoviária Federal ou Prefeituras), tanto o proprietário do veículo quanto o condutor que assume a pontuação devem assinar a declaração.'
+      }
+    ]
+  },
+  {
+    id: 'aptidao-fisica-parq',
+    slug: 'declaracao-de-aptidao-fisica-parq',
+    title: 'Declaração de Aptidão Física (Questionário PAR-Q)',
+    shortTitle: 'Aptidão Física (PAR-Q)',
+    category: 'geral',
+    badge: 'Academias e Esporte',
+    description:
+      'Questionário de Prontidão para Atividade Física (PAR-Q) internacionalmente reconhecido e aceito em academias e estúdios para prática desportiva segura.',
+    whenToUse:
+      'Utilize para efetuar matrícula em academias, boxes de crossfit, estúdios de pilates, natação e corridas que aceitam termo de responsabilidade e aptidão física.',
+    legalBase: 'Leis Estaduais de Desburocratização de Academias e Lei Federal nº 7.115/1983.',
+    fields: [
+      { id: 'nomePraticante', label: 'Nome Completo do Aluno/Praticante', type: 'text', placeholder: 'Ex: Amanda Cristina Rocha', required: true, gridSpan: 'full' },
+      { id: 'cpfPraticante', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgPraticante', label: 'RG / Órgão Emissor', type: 'text', placeholder: 'Ex: 345678 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'dataNascimento', label: 'Data de Nascimento', type: 'date', required: true, gridSpan: 'half' },
+      { id: 'nomeAcademia', label: 'Nome da Academia / Estabelecimento Esportivo', type: 'text', placeholder: 'Ex: Academia Corpo e Saúde Ltda', required: true, gridSpan: 'half' },
+      { id: 'modalidadeEsportiva', label: 'Modalidade / Atividade Desejada', type: 'text', placeholder: 'Ex: Musculação / Pilates / Natação', defaultValue: 'Musculação e Treinamento Funcional', required: true, gridSpan: 'full' },
+      { id: 'problemaCoracao', label: 'Seu médico já disse que você possui algum problema cardíaco?', type: 'select', options: [
+        { value: 'NÃO', label: 'NÃO' },
+        { value: 'SIM', label: 'SIM' }
+      ], defaultValue: 'NÃO', required: true, gridSpan: 'half' },
+      { id: 'dorNoPeito', label: 'Você sente dores no peito durante a prática de exercícios?', type: 'select', options: [
+        { value: 'NÃO', label: 'NÃO' },
+        { value: 'SIM', label: 'SIM' }
+      ], defaultValue: 'NÃO', required: true, gridSpan: 'half' },
+      { id: 'tonturaDesmaio', label: 'Você perde o equilíbrio ou desmaia durante esforço físico?', type: 'select', options: [
+        { value: 'NÃO', label: 'NÃO' },
+        { value: 'SIM', label: 'SIM' }
+      ], defaultValue: 'NÃO', required: true, gridSpan: 'half' },
+      { id: 'problemaArticular', label: 'Você possui problema ósseo ou articular que piore com atividade?', type: 'select', options: [
+        { value: 'NÃO', label: 'NÃO' },
+        { value: 'SIM', label: 'SIM' }
+      ], defaultValue: 'NÃO', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE APTIDÃO FÍSICA E QUESTIONÁRIO PAR-Q',
+        body: [
+          `Eu, ${v.nomePraticante || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfPraticante || '___________'} e RG nº ${v.rgPraticante || '____________'}, nascido(a) em ${v.dataNascimento ? formatBrazilianDate(v.dataNascimento) : '__/__/____'}, para fins de inscrição e prática esportiva perante ${v.nomeAcademia || 'a academia/estabelecimento esportivo'},`,
+          `DECLARO, para os devidos fins de direito, sob as penas da Lei Federal nº 7.115/1983, que respondi conscientemente ao Questionário de Prontidão para Atividade Física (Physical Activity Readiness Questionnaire - PAR-Q), conforme segue:`,
+          `1. Algum médico já disse que possui problema de coração e recomendou apenas atividades sob supervisão? Resposta: [ ${v.problemaCoracao || 'NÃO'} ]`,
+          `2. Você sente dores no peito provocadas pela prática de atividade física? Resposta: [ ${v.dorNoPeito || 'NÃO'} ]`,
+          `3. No último mês, você sentiu dor no peito sem estar praticando atividades físicas? Resposta: [ NÃO ]`,
+          `4. Você perde o equilíbrio em virtude de tonturas ou desmaios? Resposta: [ ${v.tonturaDesmaio || 'NÃO'} ]`,
+          `5. Você possui algum problema ósseo ou articular que pode ser agravado por alterações em sua atividade física? Resposta: [ ${v.problemaArticular || 'NÃO'} ]`,
+          `6. O seu médico prescreve medicamentos para a sua pressão arterial ou coração? Resposta: [ NÃO ]`,
+          `7. Você tem conhecimento de qualquer outra razão pela qual não deva praticar atividades físicas? Resposta: [ NÃO ]`,
+          `Em face das respostas negativas acima, DECLARO estar em plenas condições físicas e de saúde para a prática regular de ${v.modalidadeEsportiva || 'exercícios físicos'}, assumindo inteira responsabilidade por eventuais omissões quanto ao meu real estado de saúde.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomePraticante || 'Nome do Praticante / Aluno', document: `CPF: ${v.cpfPraticante || '000.000.000-00'}`, role: 'Declarante / Praticante de Atividade Física' }
+        ],
+        notes: 'Em conformidade com a legislação desportiva e os padrões do Questionário Internacional PAR-Q.'
+      };
+    },
+    faqs: [
+      {
+        question: 'O PAR-Q dispensa o atestado médico em academias?',
+        answer: 'Na maioria dos estados e municípios que desregulamentaram a exigência de atestado médico obrigatório para assintomáticos, a resposta negativa a todas as perguntas do questionário PAR-Q é legalmente suficiente para autorizar a prática de musculação e condicionamento físico.'
+      },
+      {
+        question: 'E se eu tiver respondido SIM a alguma pergunta?',
+        answer: 'Caso você responda SIM a uma ou mais perguntas do PAR-Q, é altamente recomendado consultar um médico antes de iniciar ou intensificar seus treinos.'
+      }
+    ]
+  },
+  {
+    id: 'dispensa-vale-transporte',
+    slug: 'declaracao-de-dispensa-de-vale-transporte',
+    title: 'Declaração de Dispensa / Renúncia de Vale-Transporte',
+    shortTitle: 'Dispensa de Vale-Transporte',
+    category: 'trabalho',
+    badge: 'Recursos Humanos / CLT',
+    description:
+      'Termo pelo qual o colaborador declara que utiliza condução própria para ir ao trabalho e renuncia formalmente ao recebimento de vale-transporte e ao desconto em folha.',
+    whenToUse:
+      'Apresente ao RH ou departamento pessoal da empresa na contratação ou quando decidir ir ao trabalho com moto, carro particular, a pé ou carona.',
+    legalBase: 'Lei Federal nº 7.418, de 16 de dezembro de 1985 e Artigo 7º, § 3º do Decreto Federal nº 95.247/1987.',
+    fields: [
+      { id: 'nomeColaborador', label: 'Nome Completo do Colaborador(a)', type: 'text', placeholder: 'Ex: Fernando Henrique Lima', required: true, gridSpan: 'full' },
+      { id: 'cpfColaborador', label: 'CPF do Colaborador', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgColaborador', label: 'RG do Colaborador', type: 'text', placeholder: 'Ex: 876543 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'ctpsColaborador', label: 'Número da CTPS / Série (ou CTPS Digital)', type: 'text', placeholder: 'Ex: CTPS Digital vinculada ao CPF', defaultValue: 'CTPS Digital vinculada ao CPF', required: true, gridSpan: 'half' },
+      { id: 'cargoColaborador', label: 'Cargo / Função na Empresa', type: 'text', placeholder: 'Ex: Assistente Financeiro', required: true, gridSpan: 'half' },
+      { id: 'nomeEmpresa', label: 'Nome da Empresa / Empregador', type: 'text', placeholder: 'Ex: Distribuidora Central Ltda', required: true, gridSpan: 'full' },
+      { id: 'cnpjEmpresa', label: 'CNPJ ou CPF do Empregador', type: 'text', placeholder: '00.000.000/0001-00', required: true, gridSpan: 'half' },
+      { id: 'meioTransporte', label: 'Meio de Locomoção Utilizado', type: 'select', options: [
+        { value: 'veículo automotor próprio (carro ou motocicleta)', label: 'Veículo Próprio (Carro ou Moto)' },
+        { value: 'deslocamento a pé por residir próximo ao local de trabalho', label: 'A pé (Mora perto do trabalho)' },
+        { value: 'bicicleta própria', label: 'Bicicleta Própria' },
+        { value: 'carona regular / condução privada de terceiros', label: 'Carona / Transporte de terceiros' }
+      ], defaultValue: 'veículo automotor próprio (carro ou motocicleta)', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE DISPENSA E RENÚNCIA DE VALE-TRANSPORTE',
+        body: [
+          `À empresa: ${v.nomeEmpresa || 'NOME DA EMPRESA'}, inscrita no CNPJ sob o nº ${v.cnpjEmpresa || '00.000.000/0001-00'},`,
+          `Eu, ${v.nomeColaborador || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfColaborador || '___________'}, portador(a) do RG nº ${v.rgColaborador || '____________'} e Carteira de Trabalho ${v.ctpsColaborador || 'Digital'}, exercendo a função de ${v.cargoColaborador || 'colaborador(a)'},`,
+          `DECLARO, para os devidos fins de direito e em observância ao disposto na Lei Federal nº 7.418, de 16 de dezembro de 1985, e no Artigo 7º, § 3º do Decreto Federal nº 95.247/1987, que:`,
+          `OPTO POR NÃO UTILIZAR O BENEFÍCIO DO VALE-TRANSPORTE para o trajeto de ida e volta residência-trabalho-residência, tendo em vista que me desloco por meios próprios, qual seja:`,
+          `>> MEIO DE LOCOMOÇÃO UTILIZADO: ${v.meioTransporte || 'Meio de locomoção próprio'}.`,
+          `Em virtude desta opção livre e voluntária, RENUNCIO expressamente ao recebimento do benefício do Vale-Transporte, bem como AUTORIZO A NÃO REALIZAÇÃO do respectivo desconto legal de até 6% (seis por cento) sobre o meu salário-base em folha de pagamento.`,
+          `Comprometo-me a comunicar formalmente ao Departamento de Recursos Humanos caso ocorra alteração no meu endereço ou no meio de transporte utilizado que justifique a necessidade futura do benefício.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeColaborador || 'Nome do Empregado / Colaborador', document: `CPF: ${v.cpfColaborador || '000.000.000-00'}`, role: 'Empregado(a) Declarante' }
+        ],
+        notes: 'Fundamentada na Lei nº 7.418/1985 e Decreto nº 95.247/1987. Isenta a empresa do fornecimento e desonera o trabalhador do desconto legal.'
+      };
+    },
+    faqs: [
+      {
+        question: 'O empregado pode ser obrigado a receber o vale-transporte?',
+        answer: 'Não. O benefício do Vale-Transporte é um direito do trabalhador, mas não uma imposição. Se ele preferir ir de carro, moto, bicicleta ou morar perto, pode assinar este termo de dispensa.'
+      },
+      {
+        question: 'Se eu assinar a dispensa, a empresa não descontará nada do meu salário?',
+        answer: 'Exatamente! Ao renunciar ao benefício, a empresa fica proibida de efetuar o desconto de até 6% referente ao vale-transporte no seu holerite.'
+      }
+    ]
   }
 ];
 

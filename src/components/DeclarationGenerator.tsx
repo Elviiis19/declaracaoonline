@@ -155,7 +155,22 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
   };
 
   const handlePrint = () => {
-    window.print();
+    // 1. Force the preview tab active so the document container is 100% rendered and visible in DOM
+    setMobileTab('preview');
+
+    // 2. Track analytics event
+    if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'print_declaration', {
+        event_category: 'Document',
+        event_label: model.title,
+        model_id: model.id,
+      });
+    }
+
+    // 3. Give React 120ms to flush state and render before triggering browser print dialog
+    setTimeout(() => {
+      window.print();
+    }, 120);
   };
 
   const handleSaveToBrowser = () => {
@@ -169,6 +184,13 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
     setCurrentId(saved.id);
     setSavedSuccess(true);
     onDeclarationSaved();
+    if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'save_declaration', {
+        event_category: 'Document',
+        event_label: model.title,
+        model_id: model.id,
+      });
+    }
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
@@ -187,11 +209,25 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
 
     navigator.clipboard.writeText(fullText).then(() => {
       setCopied(true);
+      if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+        (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'copy_declaration_text', {
+          event_category: 'Document',
+          event_label: model.title,
+          model_id: model.id,
+        });
+      }
       setTimeout(() => setCopied(false), 2500);
     });
   };
 
   const handleDownloadWord = () => {
+    if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'download_word_document', {
+        event_category: 'Document',
+        event_label: model.title,
+        model_id: model.id,
+      });
+    }
     const content = model.generateText(formValues);
     const htmlContent = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -236,7 +272,7 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <div className="generator-main-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 print:p-0 print:m-0 print:max-w-none">
       {/* Back button and document title banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 no-print">
         <div className="flex items-center gap-3">
@@ -263,30 +299,25 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
         </div>
 
         {/* Action buttons header (Save, Print, Gov.br) */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* PRIMARY CALL TO ACTION: Imprimir / Salvar PDF (High Contrast, WCAG AAA, Accessible) */}
           <button
-            onClick={handleSaveToBrowser}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition ${
-              savedSuccess
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
-            }`}
+            onClick={handlePrint}
+            aria-label="Imprimir declaração oficial em folha A4 ou salvar como arquivo PDF"
+            className="flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base font-extrabold bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-lg shadow-emerald-900/20 border-2 border-emerald-500 hover:border-emerald-400 transition-all transform active:scale-95 focus-visible:ring-4 focus-visible:ring-emerald-300 focus:outline-none cursor-pointer"
           >
-            {savedSuccess ? <Check className="w-4 h-4 text-emerald-600" /> : <Bookmark className="w-4 h-4 text-teal-600" />}
-            <span>{savedSuccess ? 'Salvo no Navegador!' : 'Salvar Cópia'}</span>
+            <Printer className="w-5 h-5 text-white shrink-0" />
+            <div className="text-left leading-tight">
+              <span className="block uppercase tracking-wide">Imprimir ou Salvar PDF</span>
+              <span className="text-[10px] font-medium text-emerald-100 hidden sm:block">Grátis • Pronto para Assinar</span>
+            </div>
           </button>
 
-          <button
-            onClick={handleCopyText}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition"
-          >
-            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-500" />}
-            <span>{copied ? 'Copiado!' : 'Copiar Texto'}</span>
-          </button>
-
+          {/* Secondary Actions */}
           <button
             onClick={handleDownloadWord}
-            className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition"
+            aria-label="Baixar cópia no formato Word .doc"
+            className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition shadow-sm focus-visible:ring-2 focus-visible:ring-teal-600 focus:outline-none cursor-pointer"
             title="Baixar em formato Word .DOC editável"
           >
             <Download className="w-4 h-4 text-blue-600" />
@@ -294,11 +325,25 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
           </button>
 
           <button
-            onClick={handlePrint}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-teal-700 hover:bg-teal-800 text-white shadow-md shadow-teal-900/10 transition transform active:scale-95"
+            onClick={handleCopyText}
+            aria-label="Copiar texto oficial da declaração"
+            className="flex items-center gap-1.5 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition shadow-sm focus-visible:ring-2 focus-visible:ring-teal-600 focus:outline-none cursor-pointer"
           >
-            <Printer className="w-4 h-4" />
-            <span>Imprimir / Salvar PDF</span>
+            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-600" />}
+            <span>{copied ? 'Copiado!' : 'Copiar Texto'}</span>
+          </button>
+
+          <button
+            onClick={handleSaveToBrowser}
+            aria-label="Salvar rascunho da declaração no navegador"
+            className={`flex items-center gap-1.5 px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold border transition shadow-sm focus-visible:ring-2 focus-visible:ring-teal-600 focus:outline-none cursor-pointer ${
+              savedSuccess
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+            }`}
+          >
+            {savedSuccess ? <Check className="w-4 h-4 text-emerald-600" /> : <Bookmark className="w-4 h-4 text-teal-600" />}
+            <span>{savedSuccess ? 'Salvo no Navegador!' : 'Salvar Cópia'}</span>
           </button>
         </div>
       </div>
@@ -351,7 +396,7 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
       </div>
 
       {/* Main Split Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="document-split-container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start print:!block print:!gap-0 print:!m-0 print:!p-0">
         {/* Left column: Form Fields (7 cols on lg, or mobile active) */}
         <div
           className={`lg:col-span-5 space-y-6 ${
@@ -440,15 +485,40 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
               ))}
             </div>
 
-            {/* Quick submit action on mobile */}
-            <div className="mt-6 pt-4 border-t border-slate-100 lg:hidden">
+            {/* Form Completion & Accessible Primary Action Card */}
+            <div className="mt-6 pt-5 border-t border-slate-200 space-y-3">
               <button
-                onClick={() => setMobileTab('preview')}
-                className="w-full py-2.5 rounded-xl bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                onClick={handlePrint}
+                aria-label="Gerar e imprimir declaração oficial em folha A4 ou salvar como PDF"
+                className="w-full py-4 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-3 shadow-lg shadow-emerald-950/20 border-2 border-emerald-500 hover:border-emerald-400 transition-all transform active:scale-95 focus-visible:ring-4 focus-visible:ring-emerald-300 focus:outline-none cursor-pointer"
               >
-                <Eye className="w-4 h-4" />
-                <span>Ver Documento Formatado</span>
+                <Printer className="w-5 h-5 text-white shrink-0" />
+                <span className="uppercase tracking-wider">GERAR E IMPRIMIR DECLARAÇÃO</span>
               </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setMobileTab('preview')}
+                  className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-300 transition lg:hidden cursor-pointer"
+                >
+                  <Eye className="w-4 h-4 text-teal-700" />
+                  <span>Ver Folha A4</span>
+                </button>
+                <button
+                  onClick={handleDownloadWord}
+                  className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-300 transition cursor-pointer"
+                  title="Baixar cópia no formato Word .doc"
+                >
+                  <Download className="w-4 h-4 text-blue-600" />
+                  <span>Baixar Word</span>
+                </button>
+              </div>
+
+              <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-center">
+                <p className="text-[11px] text-emerald-950 font-medium leading-relaxed">
+                  💡 <strong>Como salvar em PDF:</strong> Ao clicar no botão verde, na janela de impressão do seu navegador, escolha a impressora <strong>"Salvar como PDF"</strong>.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -484,17 +554,37 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
 
         {/* Right column: Document Paper Preview (7 cols on lg, or mobile active) */}
         <div
-          className={`lg:col-span-7 ${
+          className={`lg:col-span-7 document-preview-column print:!block print:!w-full print:!m-0 print:!p-0 ${
             mobileTab === 'form' ? 'hidden lg:block' : 'block'
           }`}
         >
-          {/* Subtle note about live updating */}
-          <div className="mb-3 flex items-center justify-between text-xs text-slate-500 px-1 no-print">
-            <span className="flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Visualização Oficial em Tempo Real (Folha A4)
-            </span>
-            <span className="text-[11px]">Pronto para impressão direta</span>
+          {/* Prominent Quick-Action Bar above preview (Accessible & Visible) */}
+          <div className="mb-4 p-3 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold text-slate-800">
+                Visualização Oficial Folha A4 • Lei 7.115/83
+              </span>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button
+                onClick={handlePrint}
+                aria-label="Imprimir documento em folha A4 ou salvar como PDF"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-sm transition transform active:scale-95 cursor-pointer focus-visible:ring-4 focus-visible:ring-emerald-300"
+              >
+                <Printer className="w-4 h-4 text-white" />
+                <span>Imprimir / Salvar PDF</span>
+              </button>
+              <button
+                onClick={handleDownloadWord}
+                aria-label="Baixar cópia no formato Microsoft Word"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition cursor-pointer"
+                title="Baixar em formato Word"
+              >
+                <Download className="w-3.5 h-3.5 text-blue-600" />
+                <span className="hidden sm:inline">Word</span>
+              </button>
+            </div>
           </div>
 
           {/* Document Sheet */}
@@ -502,30 +592,32 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
 
           {/* High RPM Strategic Bottom Action Banner - Maximum User Dwell Time */}
           <div className="mt-8 space-y-4 no-print">
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-teal-900 to-slate-900 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-teal-950 via-slate-900 to-slate-900 text-white shadow-lg border border-teal-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-bold flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <p className="text-base font-bold flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   Documento pronto para uso oficial
                 </p>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Imprima em folha A4 com margens regulamentares ou salve em PDF sem marcas d'água.
+                <p className="text-xs text-slate-300 mt-1 max-w-md leading-relaxed">
+                  Imprima em folha A4 com margens regulamentares ou salve em PDF sem marcas d'água. 100% gratuito e amparado na Lei nº 7.115/83.
                 </p>
               </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full sm:w-auto shrink-0">
                 <button
                   onClick={handlePrint}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 hover:bg-emerald-600 text-slate-950 shadow-md transition transform active:scale-95"
+                  aria-label="Imprimir declaração ou salvar em arquivo PDF"
+                  className="flex-1 sm:flex-none shrink-0 whitespace-nowrap flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-black bg-emerald-400 hover:bg-emerald-300 active:bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-950/40 transition transform active:scale-95 cursor-pointer focus-visible:ring-4 focus-visible:ring-emerald-300"
                 >
-                  <Printer className="w-4 h-4" />
-                  <span>Imprimir / PDF</span>
+                  <Printer className="w-5 h-5 text-slate-950 shrink-0" />
+                  <span className="uppercase tracking-wider">Imprimir / PDF</span>
                 </button>
                 <button
                   onClick={handleDownloadWord}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
-                  title="Baixar cópia no formato Microsoft Word"
+                  aria-label="Baixar cópia no formato Microsoft Word"
+                  className="flex-1 sm:flex-none shrink-0 whitespace-nowrap flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 active:bg-white/30 text-white border border-white/20 transition cursor-pointer"
+                  title="Baixar cópia no formato Microsoft Word (.doc)"
                 >
-                  <Download className="w-4 h-4 text-teal-300" />
+                  <Download className="w-4 h-4 text-teal-300 shrink-0" />
                   <span>Word (.doc)</span>
                 </button>
               </div>

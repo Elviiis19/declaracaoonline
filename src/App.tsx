@@ -60,6 +60,15 @@ export default function App() {
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', description);
+
+    // Send Real-Time SPA Pageview to Google Analytics (GA4)
+    if (typeof window !== 'undefined' && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'page_view', {
+        page_title: title,
+        page_location: canonicalUrl,
+        page_path: canonicalPath,
+      });
+    }
   };
 
   // Handle URL pathname and hash routing (e.g., /declaracao-de-residencia, /residencia, /aviso-legal, #declaracao-de-residencia)
@@ -226,7 +235,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-teal-700 selection:text-white">
+    <div className="app-container min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-teal-700 selection:text-white print:block print:min-h-0 print:bg-white">
       {/* Header */}
       <Header
         activeView={activeView}
@@ -244,7 +253,7 @@ export default function App() {
       />
 
       {/* Main Content Body */}
-      <main className="flex-1">
+      <main className="flex-1 print:block print:p-0 print:m-0">
         {activeView === 'generator' && selectedModel ? (
           <DeclarationGenerator
             model={selectedModel}

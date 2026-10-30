@@ -51,13 +51,27 @@
 
 /* Print Styles for official A4 Brazilian Declaration */
 @media print {
-  body {
+  /* Set A4 page dimensions with standard legal margins */
+  @page {
+    size: A4 portrait;
+    margin: 1.2cm 1.5cm;
+  }
+
+  /* Reset body and html completely for print */
+  html, body {
     background: #ffffff !important;
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
+  /* Completely hide all non-print interface components */
   .no-print,
   .adsbygoogle,
   ins.adsbygoogle,
@@ -67,29 +81,57 @@
   footer,
   aside,
   .pwa-banner,
-  .toast-container {
+  .toast-container,
+  .sticky-print-dock,
+  .cookie-banner {
     display: none !important;
   }
 
-  .print-only {
+  /* Force display:block and remove flex/grid restrictions from all parent wrappers */
+  #root,
+  main,
+  .app-container,
+  .generator-main-container,
+  .document-split-container,
+  .document-preview-column {
     display: block !important;
-  }
-
-  .printable-document-container {
-    box-shadow: none !important;
-    border: none !important;
-    margin: 0 auto !important;
-    padding: 2.5cm 2.5cm 2cm 2.5cm !important;
+    visibility: visible !important;
+    position: static !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-height: auto !important;
-    page-break-after: avoid;
-    page-break-inside: avoid;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    float: none !important;
   }
 
-  @page {
-    size: A4 portrait;
-    margin: 1.5cm;
+  /* The printable A4 sheet */
+  .printable-document-container,
+  #printable-declaration-document {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  /* Ensure text and borders are strictly pure black for laser/inkjet printing */
+  .printable-document-container * {
+    color: #000000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
   }
 }
 
