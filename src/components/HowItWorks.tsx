@@ -1,5 +1,6 @@
 import React from 'react';
 import { FileEdit, CheckCircle2, Printer, FileCheck, ArrowRight, ShieldCheck } from 'lucide-react';
+import { AdSenseBanner } from './AdSenseBanner';
 
 export const HowItWorks: React.FC<{ onGoToModels: () => void; onOpenGovGuide: () => void }> = ({
   onGoToModels,
@@ -10,7 +11,7 @@ export const HowItWorks: React.FC<{ onGoToModels: () => void; onOpenGovGuide: ()
       step: '01',
       title: 'Selecione o Modelo Necessário',
       description:
-        'Escolha entre mais de 16 modelos padronizados: residência, autônomo, união estável, desemprego, compra e venda de veículo e muito mais.',
+        'Escolha entre os 30 modelos padronizados: residência, hipossuficiência, MEI, autônomo, união estável, desemprego, compra e venda e muito mais.',
       icon: FileEdit,
     },
     {
@@ -101,6 +102,9 @@ export const HowItWorks: React.FC<{ onGoToModels: () => void; onOpenGovGuide: ()
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Internal Page AdSense Placement */}
+      <AdSenseBanner format="horizontal" className="mt-8 no-print" />
     </div>
   );
 };

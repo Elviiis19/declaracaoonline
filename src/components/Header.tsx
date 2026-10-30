@@ -29,12 +29,19 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white no-print">
-        {/* Top announcement bar for 2026 legal validity update */}
-        <div className="bg-teal-900/60 border-b border-teal-800/40 px-4 py-1.5 text-center text-xs font-medium text-teal-200 flex items-center justify-center gap-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-          <span>
-            Documentos 100% atualizados para 2026/2027 • Validade sob a <strong>Lei Federal nº 7.115/83</strong> e <strong>Lei 13.726/18</strong>
-          </span>
+        {/* Top announcement / system status bar */}
+        <div className="bg-slate-950/90 border-b border-slate-800/80 px-4 py-1.5 text-xs text-slate-300">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2 text-teal-300 text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Ambiente Seguro SSL • Lei Federal 7.115/83 & Lei 13.726/18</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-3 text-[11px] text-slate-400 font-mono select-none">
+              <span className="bg-slate-800 px-2 py-0.5 rounded text-teal-400 font-semibold">SISTEMA WEB v2.6</span>
+              <span>•</span>
+              <span className="text-emerald-400 font-bold">ACESSO 100% GRATUITO</span>
+            </div>
+          </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,11 +57,14 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
               <div>
-                <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
-                  Declaração<span className="text-teal-400">Online</span>
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                  <span>Declaração<span className="text-teal-400">Online</span></span>
+                  <span className="text-[10px] font-semibold text-teal-300 bg-teal-950/80 px-2 py-0.5 rounded-md border border-teal-800/80 uppercase tracking-wider hidden md:inline">
+                    App Web
+                  </span>
                 </span>
                 <p className="text-[11px] text-slate-400 leading-none hidden sm:block">
-                  Gerador Oficial de Declarações & Documentos
+                  Sistema Oficial de Emissão Documental • Formato A4
                 </p>
               </div>
             </div>

@@ -5,6 +5,48 @@
     scroll-behavior: smooth;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+
+  /* Desktop Software & Web-Application Cursor Ergonomics */
+  body, #root {
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Interactive Elements Have Clear App Cursor */
+  button, 
+  [role="button"], 
+  a, 
+  select, 
+  input[type="checkbox"], 
+  input[type="radio"], 
+  summary,
+  .cursor-pointer {
+    cursor: pointer !important;
+  }
+
+  /* Inputs and Textareas Retain Precision Text Cursor */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="date"],
+  textarea,
+  [contenteditable="true"] {
+    cursor: text !important;
+    user-select: text !important;
+  }
+
+  /* App Headers, Bars, Badges and Toolbars Resist Casual Highlighting */
+  header, 
+  nav, 
+  footer, 
+  button, 
+  [role="button"], 
+  .select-none,
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }
 
 /* Print Styles for official A4 Brazilian Declaration */
@@ -17,6 +59,9 @@
   }
 
   .no-print,
+  .adsbygoogle,
+  ins.adsbygoogle,
+  [aria-label="Publicidade"],
   nav,
   header,
   footer,

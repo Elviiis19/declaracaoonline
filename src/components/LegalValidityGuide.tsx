@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Scale, Award, FileText, CheckCircle, AlertOctagon, ArrowRight } from 'lucide-react';
+import { AdSenseBanner } from './AdSenseBanner';
 
 export const LegalValidityGuide: React.FC<{ onGoToModels: () => void; onOpenGovGuide: () => void }> = ({
   onGoToModels,
@@ -153,6 +154,9 @@ export const LegalValidityGuide: React.FC<{ onGoToModels: () => void; onOpenGovG
           </div>
         </div>
       </div>
+
+      {/* Internal Page AdSense Banner */}
+      <AdSenseBanner format="horizontal" className="mt-8 no-print" />
     </div>
   );
 };

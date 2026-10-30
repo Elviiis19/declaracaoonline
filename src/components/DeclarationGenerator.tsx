@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   ChevronDown
 } from 'lucide-react';
+import { AdSenseBanner } from './AdSenseBanner';
 
 interface DeclarationGeneratorProps {
   model: DeclarationModel;
@@ -324,6 +325,9 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
         </button>
       </div>
 
+      {/* Top Strategic Ad Placement (High Viewability Leaderboard - Internal Pages Only) */}
+      <AdSenseBanner format="horizontal" className="my-3 no-print" />
+
       {/* Mobile Tab switcher (Form vs Preview) */}
       <div className="lg:hidden flex rounded-xl bg-slate-200/80 p-1 mb-6 no-print">
         <button
@@ -473,6 +477,9 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
               </div>
             </div>
           )}
+
+          {/* AdSense In-Form Placement (Sidebar High-Relevance) */}
+          <AdSenseBanner format="rectangle" className="mt-4 no-print" />
         </div>
 
         {/* Right column: Document Paper Preview (7 cols on lg, or mobile active) */}
@@ -492,6 +499,41 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
 
           {/* Document Sheet */}
           <DocumentPaper model={model} formValues={formValues} />
+
+          {/* High RPM Strategic Bottom Action Banner - Maximum User Dwell Time */}
+          <div className="mt-8 space-y-4 no-print">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-teal-900 to-slate-900 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Documento pronto para uso oficial
+                </p>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Imprima em folha A4 com margens regulamentares ou salve em PDF sem marcas d'água.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  onClick={handlePrint}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 hover:bg-emerald-600 text-slate-950 shadow-md transition transform active:scale-95"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>Imprimir / PDF</span>
+                </button>
+                <button
+                  onClick={handleDownloadWord}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
+                  title="Baixar cópia no formato Microsoft Word"
+                >
+                  <Download className="w-4 h-4 text-teal-300" />
+                  <span>Word (.doc)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Strategic AdSense Placement below preview */}
+            <AdSenseBanner format="action" />
+          </div>
         </div>
       </div>
     </div>
