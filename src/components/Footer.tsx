@@ -2,7 +2,7 @@ import React from 'react';
 import { ShieldCheck, Phone, Mail, MapPin, CheckCircle, ExternalLink, Heart } from 'lucide-react';
 
 interface FooterProps {
-  onOpenInstitutional: (section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap') => void;
+  onOpenInstitutional: (section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | 'disclaimer') => void;
   onSelectModelSlug?: (slug: string) => void;
 }
 
@@ -133,6 +133,38 @@ export const Footer: React.FC<FooterProps> = ({ onOpenInstitutional, onSelectMod
               </li>
               <li>
                 <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-hipossuficiencia')}
+                  className="hover:text-teal-400 transition text-left font-medium text-teal-300"
+                >
+                  Declaração de Hipossuficiência
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('autodeclaracao-etnico-racial')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Autodeclaração Étnico-Racial
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('comprovante-de-renda-mei')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Comprovante de Renda MEI
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onSelectModelSlug?.('declaracao-de-trabalho')}
+                  className="hover:text-teal-400 transition text-left font-medium text-teal-300"
+                >
+                  Declaração de Trabalho
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onSelectModelSlug?.('declaracao-de-isencao-de-imposto-de-renda')}
                   className="hover:text-teal-400 transition text-left"
                 >
@@ -145,47 +177,47 @@ export const Footer: React.FC<FooterProps> = ({ onOpenInstitutional, onSelectMod
           {/* Modelos Civis e Bens */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Documentos & Negócios
+              Documentos & Imóveis
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-venda-e-recibo-de-veiculo')}
-                  className="hover:text-teal-400 transition text-left"
+                  onClick={() => onSelectModelSlug?.('declaracao-de-comodato')}
+                  className="hover:text-teal-400 transition text-left font-medium text-teal-300"
                 >
-                  Venda e Recibo de Veículo
+                  Declaração de Comodato
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-nao-possuir-outro-imovel')}
+                  onClick={() => onSelectModelSlug?.('declaracao-de-anuencia')}
                   className="hover:text-teal-400 transition text-left"
                 >
-                  Não Possuir Outro Imóvel
+                  Declaração de Anuência (Vizinhos)
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-extravio-de-documento')}
+                  onClick={() => onSelectModelSlug?.('declaracao-de-veracidade-de-documentos')}
                   className="hover:text-teal-400 transition text-left"
                 >
-                  Extravio / Perda de Documento
+                  Veracidade de Documentos
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-cessao-de-imovel-comodato')}
+                  onClick={() => onSelectModelSlug?.('autorizacao-de-uso-de-imagem')}
                   className="hover:text-teal-400 transition text-left"
                 >
-                  Cessão Gratuita de Imóvel
+                  Autorização de Uso de Imagem
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onSelectModelSlug?.('declaracao-de-prestacao-de-servicos')}
+                  onClick={() => onSelectModelSlug?.('declaracao-de-bons-antecedentes')}
                   className="hover:text-teal-400 transition text-left"
                 >
-                  Prestação de Serviços Autônomos
+                  Declaração de Bons Antecedentes
                 </button>
               </li>
               <li>
@@ -227,6 +259,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenInstitutional, onSelectMod
                   className="hover:text-teal-400 transition text-left"
                 >
                   Termos e Condições de Uso
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onOpenInstitutional('disclaimer')}
+                  className="hover:text-teal-400 transition text-left"
+                >
+                  Aviso Legal (Disclaimer)
                 </button>
               </li>
               <li>

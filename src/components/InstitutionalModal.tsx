@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 interface InstitutionalModalProps {
-  section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | null;
+  section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | 'disclaimer' | null;
   onClose: () => void;
   onSelectModelSlug: (slug: string) => void;
 }
@@ -26,7 +26,7 @@ export const InstitutionalModal: React.FC<InstitutionalModalProps> = ({
   onClose,
   onSelectModelSlug,
 }) => {
-  const [currentSection, setCurrentSection] = useState<'about' | 'privacy' | 'terms' | 'contact' | 'sitemap'>(
+  const [currentSection, setCurrentSection] = useState<'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | 'disclaimer'>(
     section || 'about'
   );
 
@@ -86,6 +86,16 @@ export const InstitutionalModal: React.FC<InstitutionalModalProps> = ({
               }`}
             >
               Termos de Uso
+            </button>
+            <button
+              onClick={() => setCurrentSection('disclaimer')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
+                currentSection === 'disclaimer'
+                  ? 'bg-teal-600 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Aviso Legal
             </button>
             <button
               onClick={() => setCurrentSection('contact')}
@@ -250,6 +260,47 @@ export const InstitutionalModal: React.FC<InstitutionalModalProps> = ({
                 <h3 className="font-bold text-slate-900">4. Aceitação Institucional</h3>
                 <p>
                   Embora os modelos sigam o rigor dos padrões legais exigidos por órgãos públicos e privados no Brasil, a exigência de documentos complementares (como certidões adicionais ou comprovantes de vínculo) fica a critério do órgão solicitante conforme regulamentos específicos.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* 3.1 AVISO LEGAL / DISCLAIMER */}
+          {currentSection === 'disclaimer' && (
+            <div className="space-y-5 animate-in fade-in duration-150">
+              <div className="border-b border-slate-100 pb-4">
+                <span className="text-xs font-bold text-teal-700 uppercase tracking-wider">
+                  Isenção de Responsabilidade Jurídica
+                </span>
+                <h2 className="text-2xl font-bold text-slate-900 mt-1">
+                  Aviso Legal (Disclaimer)
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Esclarecimentos legais sobre o uso dos modelos e presunção de veracidade.
+                </p>
+              </div>
+
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2 text-xs sm:text-sm text-amber-900">
+                <p className="font-bold">Atenção ao Usuário:</p>
+                <p>
+                  O <strong>Declaração Online</strong> é uma plataforma de facilitação documental e automação de texto. O serviço não substitui assessoria advocatícia especializada, cartorária ou decisões judiciais.
+                </p>
+              </div>
+
+              <div className="space-y-3 text-xs sm:text-sm">
+                <h3 className="font-bold text-slate-900">1. Responsabilidade Exclusiva do Declarante</h3>
+                <p>
+                  Ao preencher e assinar qualquer declaração gerada neste site, o usuário assume plena e irrestrita responsabilidade civil e criminal pela veracidade dos dados informados. Inserir fatos inverídicos constitui crime de <strong>falsidade ideológica</strong> (Art. 299 do Código Penal Brasileiro).
+                </p>
+
+                <h3 className="font-bold text-slate-900">2. Presunção Relativa de Veracidade (Juris Tantum)</h3>
+                <p>
+                  A declaração de residência e renda sob a <strong>Lei Federal nº 7.115/1983</strong> goza de presunção legal de veracidade perante órgãos públicos e privados, porém admite prova em contrário. Autoridades públicas têm o poder de fiscalizar e exigir comprovação suplementar a qualquer tempo.
+                </p>
+
+                <h3 className="font-bold text-slate-900">3. Isenção da Plataforma</h3>
+                <p>
+                  O Declaração Online e seu gestor Elvis Dias não são responsáveis pelo uso indevido, fraudulento ou desvirtuado dos documentos gerados por terceiros.
                 </p>
               </div>
             </div>

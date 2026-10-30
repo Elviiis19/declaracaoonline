@@ -5,7 +5,10 @@ export type CategoryType =
   | 'familia'
   | 'trabalho'
   | 'habitacao'
-  | 'bens';
+  | 'escolaridade'
+  | 'bens'
+  | 'geral';
+
 
 export interface FieldDefinition {
   id: string;

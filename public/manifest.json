@@ -1,0 +1,73 @@
+{
+  "name": "Declaração Online - Gerador de Declarações e Documentos Civis",
+  "short_name": "Declaração Online",
+  "description": "Emita declarações de residência, renda autônomo, união estável e documentos com validade legal (Lei nº 7.115/83). 100% gratuito.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#042f2e",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Catálogo completo de declarações com preenchimento e pré-visualização em tempo real"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Preenchimento rápido e geração instantânea de declarações no celular"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Declaração de Residência",
+      "short_name": "Residência",
+      "description": "Gerar comprovante de residência formal",
+      "url": "/#declaracao-de-residencia",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Declaração de Renda",
+      "short_name": "Renda Autônomo",
+      "description": "Gerar comprovante de rendimentos de autônomo",
+      "url": "/#declaracao-de-renda-autonomo",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Declaração de União Estável",
+      "short_name": "União Estável",
+      "description": "Gerar declaração de convivência marital",
+      "url": "/#declaracao-de-uniao-estavel",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

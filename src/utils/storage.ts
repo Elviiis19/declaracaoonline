@@ -67,3 +67,41 @@ export function exportDeclarationsAsJSON(): void {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+export function importDeclarationsFromJSON(jsonString: string): number {
+  try {
+    const imported = JSON.parse(jsonString);
+    if (!Array.isArray(imported)) return 0;
+    const existing = getSavedDeclarations();
+    const existingIds = new Set(existing.map((item) => item.id));
+
+    let addedCount = 0;
+    const validItems: SavedDeclaration[] = [];
+
+    for (const item of imported) {
+      if (item && item.modelId && item.values) {
+        const id = existingIds.has(item.id)
+          ? 'dec_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7)
+          : (item.id || 'dec_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));
+        validItems.push({
+          ...item,
+          id,
+          updatedAt: item.updatedAt || new Date().toISOString(),
+          createdAt: item.createdAt || new Date().toISOString(),
+        });
+        existingIds.add(id);
+        addedCount++;
+      }
+    }
+
+    if (addedCount > 0) {
+      const merged = [...validItems, ...existing];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    }
+    return addedCount;
+  } catch (e) {
+    console.error('Falha ao importar declarações:', e);
+    return 0;
+  }
+}
+

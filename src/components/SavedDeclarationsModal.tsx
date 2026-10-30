@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { SavedDeclaration } from '../types/declaration';
-import { deleteSavedDeclaration, exportDeclarationsAsJSON, clearAllSavedDeclarations } from '../utils/storage';
-import { X, Trash2, Edit3, Download, FileText, Calendar, AlertTriangle } from 'lucide-react';
+import {
+  deleteSavedDeclaration,
+  exportDeclarationsAsJSON,
+  importDeclarationsFromJSON,
+  clearAllSavedDeclarations,
+} from '../utils/storage';
+import { X, Trash2, Edit3, Download, Upload, FileText, Calendar, AlertTriangle } from 'lucide-react';
 
 interface SavedDeclarationsModalProps {
   isOpen: boolean;
@@ -18,6 +23,8 @@ export const SavedDeclarationsModal: React.FC<SavedDeclarationsModalProps> = ({
   onLoadDeclaration,
   onRefreshList,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (!isOpen) return null;
 
   const handleDelete = (id: string) => {
@@ -32,6 +39,27 @@ export const SavedDeclarationsModal: React.FC<SavedDeclarationsModalProps> = ({
       clearAllSavedDeclarations();
       onRefreshList();
     }
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        const count = importDeclarationsFromJSON(content);
+        if (count > 0) {
+          alert(`Sucesso! ${count} declaração(ões) importada(s) para o seu navegador.`);
+          onRefreshList();
+        } else {
+          alert('Nenhuma declaração válida encontrada no arquivo selecionado.');
+        }
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -118,25 +146,50 @@ export const SavedDeclarationsModal: React.FC<SavedDeclarationsModalProps> = ({
           )}
         </div>
 
+        {/* Hidden File Input for Backup Import */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept=".json,application/json"
+          onChange={handleImportFile}
+          className="hidden"
+        />
+
         {/* Modal Footer */}
-        {savedList.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-slate-800 shrink-0 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="mt-4 pt-4 border-t border-slate-800 shrink-0 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-4">
             <button
-              onClick={exportDeclarationsAsJSON}
+              onClick={() => fileInputRef.current?.click()}
               className="flex items-center gap-1.5 text-slate-300 hover:text-teal-400 font-medium transition"
+              title="Restaurar declarações a partir de um arquivo .json"
             >
-              <Download className="w-4 h-4 text-teal-400" />
-              <span>Baixar Arquivo de Backup (JSON)</span>
+              <Upload className="w-4 h-4 text-teal-400" />
+              <span>Importar Backup (JSON)</span>
             </button>
+
+            {savedList.length > 0 && (
+              <button
+                onClick={exportDeclarationsAsJSON}
+                className="flex items-center gap-1.5 text-slate-300 hover:text-teal-400 font-medium transition"
+                title="Baixar arquivo seguro com todas as declarações salvas"
+              >
+                <Download className="w-4 h-4 text-teal-400" />
+                <span>Baixar Backup (JSON)</span>
+              </button>
+            )}
+          </div>
+
+          {savedList.length > 0 && (
             <button
               onClick={handleClearAll}
               className="flex items-center gap-1.5 text-rose-400 hover:text-rose-300 transition"
+              title="Apagar todas as cópias deste navegador"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Limpar Tudo</span>
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

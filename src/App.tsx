@@ -13,6 +13,7 @@ import { SavedDeclarationsModal } from './components/SavedDeclarationsModal';
 import { GovSignatureGuideModal } from './components/GovSignatureGuideModal';
 import { InstitutionalModal } from './components/InstitutionalModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { CookieBanner } from './components/CookieBanner';
 
 export default function App() {
   const [activeView, setActiveView] = useState<string>('models');
@@ -21,7 +22,7 @@ export default function App() {
   const [savedModalOpen, setSavedModalOpen] = useState(false);
   const [govGuideModalOpen, setGovGuideModalOpen] = useState(false);
   const [institutionalSection, setInstitutionalSection] = useState<
-    'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | null
+    'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | 'disclaimer' | null
   >(null);
   const [editingSavedId, setEditingSavedId] = useState<string | undefined>(undefined);
   const [editingValues, setEditingValues] = useState<Record<string, string> | undefined>(undefined);
@@ -35,46 +36,133 @@ export default function App() {
     refreshSavedList();
   }, []);
 
-  // Handle URL pathname and hash routing (e.g., /declaracao-de-residencia or #declaracao-de-residencia)
+  // Helper to dynamically synchronize title, canonical URL, and description for Googlebot and users
+  const updateMetaTags = (title: string, description: string, canonicalPath: string) => {
+    document.title = title;
+    const canonicalUrl = `https://declaracaoonline.com.br${canonicalPath}`;
+
+    let linkCanonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!linkCanonical) {
+      linkCanonical = document.createElement('link');
+      linkCanonical.rel = 'canonical';
+      document.head.appendChild(linkCanonical);
+    }
+    linkCanonical.href = canonicalUrl;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', description);
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', title);
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute('content', canonicalUrl);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', description);
+  };
+
+  // Handle URL pathname and hash routing (e.g., /declaracao-de-residencia, /residencia, /aviso-legal, #declaracao-de-residencia)
   useEffect(() => {
     const handleLocationChange = () => {
-      const pathname = window.location.pathname.replace(/^\//, '').trim();
-      const hash = window.location.hash.replace(/^#/, '').trim();
-      const route = pathname || hash;
+      const rawPathname = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').trim();
+      const rawHash = window.location.hash.replace(/^#/, '').replace(/\/$/, '').trim();
+      const rawRoute = rawPathname || rawHash;
+      // Strip optional "declaracoes/" prefix if visited
+      const route = rawRoute.replace(/^declaracoes\//, '');
 
       if (!route) {
         setActiveView('models');
         setSelectedModel(null);
-        document.title = 'Declaração Online - Gerador de Declarações e Documentos';
+        updateMetaTags(
+          'Declaração Online - Gerador de Declarações e Documentos',
+          'Gerador gratuito de declarações com validade jurídica (Lei nº 7.115/83). Modelos de residência, renda autônomo, união estável, desemprego e mais.',
+          '/'
+        );
         return;
       }
 
       if (route === 'valididade' || route === 'validity') {
         setActiveView('validity');
         setSelectedModel(null);
-        document.title = 'Validade Jurídica (Lei 7.115/83 e Lei 13.726/18) - Declaração Online';
+        updateMetaTags(
+          'Validade Jurídica (Lei 7.115/83 e Lei 13.726/18) - Declaração Online',
+          'Entenda a validade legal das declarações civis pela Lei Federal 7.115/83 e a dispensa de reconhecimento de firma em cartório pela Lei 13.726/2018.',
+          '/validade-juridica'
+        );
       } else if (route === 'como-funciona' || route === 'how-it-works') {
         setActiveView('how-it-works');
         setSelectedModel(null);
-        document.title = 'Como Funciona Passo a Passo - Declaração Online';
-      } else if (route === 'faq' || route === 'duvidas') {
+        updateMetaTags(
+          'Como Funciona Passo a Passo - Declaração Online',
+          'Veja como preencher seus dados, gerar o documento oficial em formato A4 e assinar gratuitamente com o Gov.br em menos de 2 minutos.',
+          '/como-funciona'
+        );
+      } else if (route === 'faq' || route === 'duvidas' || route === 'perguntas-frequentes') {
         setActiveView('faq');
         setSelectedModel(null);
-        document.title = 'Dúvidas Frequentes e Validade em Cartório - Declaração Online';
-      } else if (route === 'quem-somos' || route === 'about') {
-        setActiveView('about');
-        setSelectedModel(null);
-        document.title = 'Quem Somos - Declaração Online (Elvis Dias)';
+        updateMetaTags(
+          'Dúvidas Frequentes e Validade em Cartório - Declaração Online',
+          'Perguntas frequentes sobre declarações civis, aceitação em bancos, PROUNI, CRAS e validade jurídica de documentos sem cartório.',
+          '/perguntas-frequentes'
+        );
+      } else if (route === 'quem-somos' || route === 'about' || route === 'sobre') {
+        setInstitutionalSection('about');
+        updateMetaTags(
+          'Quem Somos - Declaração Online (Elvis Dias)',
+          'Conheça o portal Declaração Online, gerido por Elvis Dias (CNPJ 43.027.941/0001-21), facilitando a desburocratização de documentos no Brasil.',
+          '/sobre'
+        );
+      } else if (route === 'politica-privacidade' || route === 'politica-de-privacidade') {
+        setInstitutionalSection('privacy');
+        updateMetaTags(
+          'Política de Privacidade (LGPD) - Declaração Online',
+          'Política de privacidade do portal Declaração Online. Seus dados nunca saem do seu navegador. 100% em conformidade com a LGPD.',
+          '/politica-privacidade'
+        );
+      } else if (route === 'termos-uso' || route === 'termos-de-uso') {
+        setInstitutionalSection('terms');
+        updateMetaTags(
+          'Termos de Uso - Declaração Online',
+          'Termos e condições de uso do portal gratuito Declaração Online.',
+          '/termos-uso'
+        );
+      } else if (route === 'aviso-legal') {
+        setInstitutionalSection('disclaimer');
+        updateMetaTags(
+          'Aviso Legal e Isenção - Declaração Online',
+          'Aviso legal e conformidade jurídica das declarações civis pela Lei 7.115/83 e Lei 13.726/18.',
+          '/aviso-legal'
+        );
+      } else if (route === 'fale-conosco' || route === 'contato') {
+        setInstitutionalSection('contact');
+        updateMetaTags(
+          'Fale Conosco - Declaração Online',
+          'Entre em contato com o suporte do Declaração Online pelo WhatsApp (69) 98103-9664.',
+          '/fale-conosco'
+        );
       } else {
-        // Match declaration model slug
+        // Match declaration model slug or id or direct short route
         const matched = DECLARATION_MODELS.find(
-          (m) => m.slug === route || m.id === route
+          (m) =>
+            m.slug === route ||
+            m.id === route ||
+            m.slug === `declaracao-de-${route}` ||
+            m.slug === `declaracao-${route}` ||
+            (route === 'autorizacao-de-viagem-para-menor' && m.id === 'autorizacao-viagem') ||
+            (route === 'declaracao-de-veracidade' && m.id === 'veracidade-documentos') ||
+            (route === 'declaracao-de-trabalho' && m.id === 'declaracao-trabalho')
         );
         if (matched) {
           setSelectedModel(matched);
           setActiveView('generator');
-          document.title = `${matched.title} - Gerador Oficial em PDF | Declaração Online`;
+          updateMetaTags(
+            `${matched.title} - Gerador Oficial em PDF | Declaração Online`,
+            `${matched.description} Preenchimento gratuito em formato padrão A4 com validade pela Lei Federal nº 7.115/83.`,
+            `/${matched.slug}`
+          );
         }
+
       }
     };
 
@@ -93,7 +181,11 @@ export default function App() {
     setEditingValues(undefined);
     setActiveView('generator');
     window.history.pushState(null, '', `/${model.slug}`);
-    document.title = `${model.title} - Gerador Oficial em PDF | Declaração Online`;
+    updateMetaTags(
+      `${model.title} - Gerador Oficial em PDF | Declaração Online`,
+      `${model.description} Preenchimento gratuito em formato padrão A4 com validade pela Lei Federal nº 7.115/83.`,
+      `/${model.slug}`
+    );
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -128,7 +220,7 @@ export default function App() {
   };
 
   const handleOpenInstitutional = (
-    section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap'
+    section: 'about' | 'privacy' | 'terms' | 'contact' | 'sitemap' | 'disclaimer'
   ) => {
     setInstitutionalSection(section);
   };
@@ -216,6 +308,9 @@ export default function App() {
       />
 
       <OfflineIndicator />
+
+      {/* LGPD Cookie Consent Banner */}
+      <CookieBanner onOpenPrivacy={() => handleOpenInstitutional('privacy')} />
     </div>
   );
 }

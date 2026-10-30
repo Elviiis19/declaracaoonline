@@ -16,7 +16,8 @@ import {
   CheckCircle2,
   Sparkles,
   X,
-  Tag
+  Tag,
+  GraduationCap
 } from 'lucide-react';
 
 interface ModelCatalogProps {
@@ -51,6 +52,20 @@ const MODEL_SYNONYMS: Record<string, string[]> = {
   'cessao-imovel-comodato': ['imovel cedido', 'de favor', 'comodato', 'sem pagar aluguel', 'terceiro'],
   'autorizacao-viagem': ['viagem', 'aviao', 'onibus', 'hotel', 'hospedagem', 'menor de idade', 'eca'],
   'ausencia-bens': ['sem bens', 'divorcio consensual', 'partilha', 'cartorio', 'separacao'],
+  'pensao-alimenticia': ['pensao', 'alimentos', 'filho', 'mae', 'pai', 'prouni', 'fies', 'cadunico', 'recebimento de pensao'],
+  'pagamento-pensao-alimenticia': ['pago pensao', 'pagamento de pensao', 'alimentos', 'deducao', 'gasto familiar'],
+  escolaridade: ['escola publica', 'cotas', 'sisu', 'prouni', 'enem', 'colegio', 'bolsa 100', 'ensino medio'],
+  'estado-civil': ['solteiro', 'casado', 'divorciado', 'viuvo', 'certidao', 'junta comercial', 'caixa'],
+  'ausencia-residencia': ['sem residencia fixa', 'itinerante', 'viajante', 'sem casa', 'alojamento', 'caminhoneiro', 'transito'],
+  hipossuficiencia: ['justica gratuita', 'pobreza', 'isencao custas', 'sem condicoes', 'defensoria publica', 'juizado', 'assistencia judiciaria', 'cpc 98', 'lei 1060'],
+  'etnico-racial': ['cota racial', 'preto', 'pardo', 'indigena', 'sisu', 'heteroidentificacao', 'concurso', 'acao afirmativa', 'prouni', 'etnia', 'lei de cotas'],
+  'veracidade-documentos': ['autenticidade', 'copia autenticada', 'desburocratizacao', 'dispensa cartorio', 'conferencia com original', 'documentos autenticos', 'lei 13726'],
+  'uso-imagem': ['direito de imagem', 'cessao de imagem', 'fotografia', 'video', 'voz', 'redes sociais', 'escola', 'lgpd', 'aluno', 'gravacao'],
+  'renda-mei': ['microempreendedor', 'faturamento mei', 'decore mei', 'comprovante mei', 'renda mei', 'cnpj mei', 'pro-labore', 'lucro isento', 'extrato mei'],
+  comodato: ['imovel cedido', 'emprestimo de imovel', 'veiculo cedido', 'de favor', 'cessao gratuita', 'sem aluguel', 'equipamento', 'terreno'],
+  anuencia: ['vizinho', 'confrontante', 'obra', 'muro', 'divisa', 'alvara prefeitura', 'retificacao de area', 'cartorio', 'concordancia'],
+  'bons-antecedentes': ['idoneidade', 'sem crimes', 'antecedentes criminais', 'folha corrida', 'admissao emprego', 'concurso', 'conduta ilibada'],
+  'declaracao-trabalho': ['comprovante de trabalho', 'vinculo empregaticio', 'declaracao de emprego', 'horario de trabalho', 'creche', 'escola', 'clt', 'prestador', 'patrao'],
 };
 
 // Componente para destacar trechos encontrados na busca
@@ -91,20 +106,33 @@ export const ModelCatalog: React.FC<ModelCatalogProps> = ({
     { id: 'residencia', label: 'Residência & Endereço', icon: Home },
     { id: 'renda', label: 'Renda & Financeiro', icon: DollarSign },
     { id: 'familia', label: 'Família & União', icon: Users },
+    { id: 'escolaridade', label: 'Escolaridade & Cotas', icon: GraduationCap },
     { id: 'habitacao', label: 'Habitação & Imóveis', icon: Key },
     { id: 'trabalho', label: 'Trabalho & Serviços', icon: Briefcase },
     { id: 'bens', label: 'Veículos & Bens', icon: Car },
+    { id: 'geral', label: 'Cidadania & Declarações Gerais', icon: ShieldCheck },
   ];
 
   const quickSearchSuggestions = [
+    'Hipossuficiência',
+    'Cotas Étnico-Racial',
+    'Renda MEI',
     'Residência',
     'Renda Autônomo',
+    'Declaração de Trabalho',
+    'Comodato',
+    'Anuência de Vizinho',
+    'Uso de Imagem',
+    'Veracidade de Documentos',
+    'Bons Antecedentes',
     'União Estável',
+    'Pensão Alimentícia',
+    'Escolaridade',
+    'Estado Civil',
     'Desemprego',
     'Minha Casa Minha Vida',
     'Venda de Veículo',
     'Isenção IRPF',
-    'Perda de Documento',
   ];
 
   // Atalho do teclado: pressionar "/" para focar a barra de pesquisa

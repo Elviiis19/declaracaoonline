@@ -829,5 +829,806 @@ export const DECLARATION_MODELS: DeclarationModel[] = [
         answer: 'Sim, acelera expressivamente a escritura pública de divórcio, reduzindo os custos de emolumentos para a taxa mínima de divórcio sem partilha de bens.'
       }
     ]
+  },
+  {
+    id: 'pensao-alimenticia',
+    slug: 'declaracao-de-pensao-alimenticia',
+    title: 'Declaração de Recebimento de Pensão Alimentícia',
+    shortTitle: 'Recebimento de Pensão',
+    category: 'familia',
+    badge: 'Família & Alimentos',
+    description:
+      'Comprova o recebimento mensal de pensão alimentícia para sustento de filho(s) ou dependente, seja fixada judicialmente ou por acordo verbal entre os pais.',
+    whenToUse:
+      'Indispensável para composição de renda familiar em editais do Prouni, FIES, CadÚnico (Bolsa Família), matrículas em creches e solicitações de bolsa de estudo.',
+    legalBase: 'Lei Federal nº 7.115/1983 e Artigo 1.694 da Lei nº 10.406/2002 (Código Civil).',
+    fields: [
+      { id: 'nomeRecebedor', label: 'Nome de Quem Recebe (Mãe/Pai ou Responsável)', type: 'text', placeholder: 'Ex: Tatiana de Oliveira Santos', required: true, gridSpan: 'full' },
+      { id: 'cpfRecebedor', label: 'CPF do(a) Responsável', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgRecebedor', label: 'RG do(a) Responsável', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nomeFilho', label: 'Nome do(s) Filho(s) / Beneficiário(s)', type: 'text', placeholder: 'Ex: Lucas Oliveira Santos (menor)', required: true, gridSpan: 'full' },
+      { id: 'nomePagador', label: 'Nome do(a) Alimentante (Quem Paga)', type: 'text', placeholder: 'Ex: Marcelo Henrique Santos', required: true, gridSpan: 'full' },
+      { id: 'cpfPagador', label: 'CPF de Quem Paga (se souber)', type: 'cpf', placeholder: '000.000.000-00', gridSpan: 'half' },
+      { id: 'valorMensal', label: 'Valor Mensal Recebido (R$)', type: 'currency', placeholder: 'R$ 600,00', required: true, gridSpan: 'half' },
+      { id: 'formaPagamento', label: 'Forma de Recebimento', type: 'select', options: [
+        { value: 'Transferência Bancária / PIX', label: 'Transferência Bancária / PIX' },
+        { value: 'Dinheiro em Espécie', label: 'Dinheiro em Espécie' },
+        { value: 'Desconto em Folha de Pagamento', label: 'Desconto em Folha de Pagamento' },
+        { value: 'Depósito em Conta Corrente/Poupança', label: 'Depósito em Conta' }
+      ], defaultValue: 'Transferência Bancária / PIX', required: true, gridSpan: 'half' },
+      { id: 'tipoAcordo', label: 'Origem da Pensão', type: 'select', options: [
+        { value: 'Acordo verbal e voluntário entre as partes', label: 'Acordo verbal / informal' },
+        { value: 'Decisão / Homologação Judicial', label: 'Processo Judicial' },
+        { value: 'Escritura Pública de Cartório', label: 'Escritura Pública' }
+      ], defaultValue: 'Acordo verbal e voluntário entre as partes', gridSpan: 'half' },
+      { id: 'logradouro', label: 'Endereço da Residência', type: 'text', placeholder: 'Rua das Mangueiras, 210', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const pagadorCpf = v.cpfPagador ? `, inscrito(a) no CPF nº ${v.cpfPagador}` : '';
+      return {
+        title: 'DECLARAÇÃO DE RECEBIMENTO DE PENSÃO ALIMENTÍCIA',
+        body: [
+          `Eu, ${v.nomeRecebedor || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfRecebedor || '___________'} e portador(a) do RG nº ${v.rgRecebedor || '____________'}, residente e domiciliado(a) na ${v.logradouro || '________________________'}, ${city} - ${uf},`,
+          `DECLARO, para os devidos fins de comprovação de renda e sob as penas da Lei nº 7.115/1983 e do Artigo 299 do Código Penal Brasileiro, que RECEBO mensalmente a quantia de:`,
+          `>> ${v.valorMensal || 'R$ 0,00'}, mediante ${v.formaPagamento || 'PIX'},`,
+          `paga por ${v.nomePagador || '_______________________'}${pagadorCpf}, a título de PENSÃO ALIMENTÍCIA para a manutenção e sustento de ${v.nomeFilho || 'nosso(s) filho(s)'}, fruto de ${v.tipoAcordo || 'acordo entre as partes'}.`,
+          `Declaro que o valor supracitado corresponde à integralidade do montante recebido periodicamente para tal finalidade, assumindo total responsabilidade pela veracidade das informações ora declaradas.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeRecebedor || 'Nome do Recebedor', document: `CPF: ${v.cpfRecebedor || '000.000.000-00'}`, role: 'Declarante / Representante Legal' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'O Prouni e o CadÚnico aceitam pensão recebida por acordo verbal?',
+        answer: 'Sim! As comissões do MEC e assistentes sociais do CRAS aceitam plenamente a declaração assinada pelo genitor responsável nos termos da Lei 7.115/83, quando não há processo na Justiça.'
+      }
+    ]
+  },
+  {
+    id: 'pagamento-pensao-alimenticia',
+    slug: 'declaracao-de-pagamento-de-pensao-alimenticia',
+    title: 'Declaração de Pagamento de Pensão Alimentícia',
+    shortTitle: 'Pagamento de Pensão',
+    category: 'familia',
+    badge: 'Dedução de Renda',
+    description:
+      'Comprova que o declarante paga mensalmente alimentos a filho(s) ou ex-cônjuge, permitindo abater essa despesa do cálculo da renda bruta familiar.',
+    whenToUse:
+      'Processos seletivos do Prouni, FIES, pedidos de isenção, assistência social e comprovações de gastos obrigatórios mensais.',
+    legalBase: 'Lei Federal nº 7.115/1983 e Artigo 1.694 do Código Civil.',
+    fields: [
+      { id: 'nomePagador', label: 'Nome do Alimentante (Quem Paga)', type: 'text', placeholder: 'Ex: Fernando Mendes Silveira', required: true, gridSpan: 'full' },
+      { id: 'cpfPagador', label: 'CPF do Pagador', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgPagador', label: 'RG do Pagador', type: 'text', placeholder: '345678 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nomeBeneficiario', label: 'Nome do Filho(a) ou Alimentando', type: 'text', placeholder: 'Ex: Giovanna Silveira (filha)', required: true, gridSpan: 'full' },
+      { id: 'nomeFavorecido', label: 'Nome de Quem Recebe o Valor (Ex: Mãe da criança)', type: 'text', placeholder: 'Ex: Camila Ferreira Rocha', required: true, gridSpan: 'full' },
+      { id: 'valorMensal', label: 'Valor Mensal Pago (R$)', type: 'currency', placeholder: 'R$ 550,00', required: true, gridSpan: 'half' },
+      { id: 'formaPagamento', label: 'Forma de Pagamento', type: 'text', placeholder: 'Ex: Transferência PIX / Dinheiro', defaultValue: 'Transferência PIX', gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE PAGAMENTO DE PENSÃO ALIMENTÍCIA',
+        body: [
+          `Eu, ${v.nomePagador || '_______________________'}, inscrito(a) no CPF nº ${v.cpfPagador || '___________'} e portador(a) do RG nº ${v.rgPagador || '____________'},`,
+          `DECLARO, para todos os fins de direito e especialmente para instrução de cadastros socioeconômicos, sob as penas da Lei Federal nº 7.115/1983 e do Art. 299 do Código Penal, que PAGO mensalmente a quantia de:`,
+          `>> ${v.valorMensal || 'R$ 0,00'}, mediante ${v.formaPagamento || 'PIX'},`,
+          `a título de PENSÃO ALIMENTÍCIA para a manutenção do(a) alimentando(a) ${v.nomeBeneficiario || 'meu(minha) filho(a)'}, sendo o valor repassado diretamente a ${v.nomeFavorecido || 'o(a) genitor(a) guardião(ã)'}.`,
+          `Declaro que o pagamento constitui obrigação regular ininterrupta, impactando diretamente na composição de minha receita disponível.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomePagador || 'Nome do Pagador', document: `CPF: ${v.cpfPagador || '000.000.000-00'}`, role: 'Alimentante / Pagador' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Essa declaração reduz minha renda per capita no Prouni?',
+        answer: 'Sim, comprovar despesa com pensão alimentícia oficial ou formalmente declarada é aceito pelos comitês para demonstrar a real capacidade financeira da família.'
+      }
+    ]
+  },
+  {
+    id: 'escolaridade',
+    slug: 'declaracao-de-escolaridade',
+    title: 'Declaração de Escolaridade e Ensino Público',
+    shortTitle: 'Escolaridade',
+    category: 'escolaridade',
+    badge: 'Educação & Cotas',
+    description:
+      'Declara que o estudante cursou todo o Ensino Fundamental ou Médio em escola pública ou com bolsa integral, requisito básico para cotas no SiSU, Prouni e vestibulares.',
+    whenToUse:
+      'Inscrição e matrícula em cotas sociais de Universidades Públicas (SiSU), Institutos Federais (IFs), Prouni e isenção de taxas de inscrição do Enem e vestibulares.',
+    legalBase: 'Lei Federal nº 12.711/2012 (Lei de Cotas) e Lei Federal nº 7.115/1983.',
+    fields: [
+      { id: 'nomeAluno', label: 'Nome Completo do Aluno', type: 'text', placeholder: 'Ex: Lucas Gabriel Moreira', required: true, gridSpan: 'full' },
+      { id: 'cpfAluno', label: 'CPF do Aluno', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgAluno', label: 'RG do Aluno', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nivelEnsino', label: 'Nível de Ensino Cursado', type: 'select', options: [
+        { value: 'Ensino Médio completo', label: 'Ensino Médio completo' },
+        { value: 'Ensino Fundamental completo', label: 'Ensino Fundamental completo' },
+        { value: 'Ensino Fundamental e Médio integrais', label: 'Fundamental e Médio integrais' }
+      ], defaultValue: 'Ensino Médio completo', required: true, gridSpan: 'half' },
+      { id: 'tipoInstituicao', label: 'Tipo de Instituição', type: 'select', options: [
+        { value: 'integralmente em Escola Pública da rede municipal/estadual/federal', label: 'Integralmente em Escola Pública' },
+        { value: 'em Escola Particular na condição de bolsista integral (100%)', label: 'Escola Particular com Bolsa 100%' }
+      ], defaultValue: 'integralmente em Escola Pública da rede municipal/estadual/federal', required: true, gridSpan: 'half' },
+      { id: 'nomeEscola', label: 'Nome da Escola / Colégio', type: 'text', placeholder: 'Ex: E.E.E.F.M. Marechal Rondon', required: true, gridSpan: 'full' },
+      { id: 'cidadeEscola', label: 'Cidade da Escola', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estadoEscola', label: 'UF da Escola', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade de Emissão', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE ESCOLARIDADE EM REDE PÚBLICA DE ENSINO',
+        body: [
+          `Eu, ${v.nomeAluno || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfAluno || '___________'} e portador(a) do RG nº ${v.rgAluno || '____________'},`,
+          `DECLARO, para fins de comprovação perante comissões de heteroidentificação, análise socioeconômica e bancas de matrícula universitária, sob as penas da Lei Federal nº 7.115/1983 e em estrita consonância com a Lei nº 12.711/2012 (Lei de Cotas), que cursei o:`,
+          `>> ${v.nivelEnsino || 'Ensino Médio'}, ${v.tipoInstituicao || 'integralmente em Escola Pública'},`,
+          `tendo realizado meus estudos no estabelecimento de ensino: ${v.nomeEscola || 'Escola da Rede Pública'}, situado no município de ${v.cidadeEscola || city} - ${v.estadoEscola || uf}.`,
+          `Declaro estar ciente de que a comprovação falsa sujeitará o candidato ao cancelamento imediato de sua matrícula e à responsabilização criminal nos termos do Art. 299 do Código Penal.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeAluno || 'Nome do Estudante', document: `CPF: ${v.cpfAluno || '000.000.000-00'}`, role: 'Declarante / Estudante' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem estudou em colégio militar ou federal tem direito a cotas?',
+        answer: 'Sim! Colégios militares e Institutos Federais (IFs) integram a rede pública de ensino para todos os efeitos da Lei nº 12.711/2012.'
+      }
+    ]
+  },
+  {
+    id: 'estado-civil',
+    slug: 'declaracao-de-estado-civil',
+    title: 'Declaração de Estado Civil',
+    shortTitle: 'Estado Civil',
+    category: 'familia',
+    badge: 'Identificação Civil',
+    description:
+      'Declara solenemente a condição de solteiro(a), viúvo(a), separado(a) ou divorciado(a), atestando a inexistência de casamento ou união estável impeditiva.',
+    whenToUse:
+      'Financiamentos na Caixa Econômica, aquisição de imóveis, abertura de empresas em Juntas Comerciais e concursos públicos.',
+    legalBase: 'Lei Federal nº 7.115/1983 e Artigo 1.511 do Código Civil Brasileiro.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo', type: 'text', placeholder: 'Ex: Rodrigo Medeiros da Costa', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG / Órgão Emissor', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'estadoCivilAtual', label: 'Estado Civil a Declarar', type: 'select', options: [
+        { value: 'SOLTEIRO(A)', label: 'Solteiro(a)' },
+        { value: 'DIVORCIADO(A)', label: 'Divorciado(a)' },
+        { value: 'VIÚVO(A)', label: 'Viúvo(a)' },
+        { value: 'SEPARADO(A) JUDICIALMENTE', label: 'Separado(a) Judicialmente' }
+      ], defaultValue: 'SOLTEIRO(A)', required: true, gridSpan: 'half' },
+      { id: 'mantemUniao', label: 'Possui União Estável?', type: 'select', options: [
+        { value: 'não mantenho qualquer convivência sob regime de união estável', label: 'Não possuo união estável' },
+        { value: 'vivo em união estável sem casamento civil', label: 'Vivo em união estável' }
+      ], defaultValue: 'não mantenho qualquer convivência sob regime de união estável', required: true, gridSpan: 'half' },
+      { id: 'logradouro', label: 'Endereço Residencial', type: 'text', placeholder: 'Av. Pinheiro Machado, 890', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE ESTADO CIVIL',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpf || '___________'} e portador(a) da cédula de identidade RG nº ${v.rg || '____________'}, residente na ${v.logradouro || '________________________'}, ${city} - ${uf},`,
+          `DECLARO, para todos os efeitos jurídicos perante quaisquer instituições financeiras, cartorárias ou administrativas, sob as penas da Lei nº 7.115/1983 e do Art. 299 do Código Penal, que meu estado civil é:`,
+          `>> ${v.estadoCivilAtual || 'SOLTEIRO(A)'},`,
+          `e que ${v.mantemUniao || 'não mantenho qualquer convivência sob regime de união estável'}, não havendo impedimento matrimonial nem regime de bens compartilhado com terceiros que vincule meu patrimônio pessoal.`,
+          `Por ser a expressão incontestável da verdade, firmo a presente declaração.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Declarante', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem é divorciado no papel mas mora com outra pessoa precisa declarar?',
+        answer: 'Sim, o estado civil formal da certidão continua sendo divorciado, mas é prudente informar a existência da união estável se o negócio envolver financiamento de imóvel.'
+      }
+    ]
+  },
+  {
+    id: 'ausencia-residencia',
+    slug: 'declaracao-de-ausencia-de-residencia-fixa',
+    title: 'Declaração de Ausência de Residência Fixa / Itinerante',
+    shortTitle: 'Sem Residência Fixa',
+    category: 'residencia',
+    badge: 'Moradia Transitória',
+    description:
+      'Atesta que a pessoa exerce atividade transitória ou itinerante e não possui domicílio residencial fixo no momento.',
+    whenToUse:
+      'Trabalhadores rurais em safra, prestadores de serviços em obras rodoviárias/florestais, caminhoneiros, artistas e cadastros de assistência social.',
+    legalBase: 'Artigo 73 da Lei nº 10.406/2002 (Código Civil) e Lei Federal nº 7.115/1983.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo', type: 'text', placeholder: 'Ex: Valdemar de Souza Neves', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG', type: 'text', placeholder: 'Ex: 234567 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'profissao', label: 'Atividade / Ocupação', type: 'text', placeholder: 'Ex: Motorista carreteiro / Trabalhador rural', required: true, gridSpan: 'half' },
+      { id: 'motivoTransito', label: 'Motivo da Ausência de Residência Fixa', type: 'text', placeholder: 'Ex: Atividade profissional itinerante e constantes deslocamentos', defaultValue: 'constantes deslocamentos profissionais e alojamento temporário', required: true, gridSpan: 'full' },
+      { id: 'pontoContato', label: 'Local ou Ponto de Contato / Correspondência', type: 'text', placeholder: 'Ex: Alojamento da Empresa / Casa de familiares no Centro', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade de Referência', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE AUSÊNCIA DE RESIDÊNCIA FIXA',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, inscrito(a) no CPF nº ${v.cpf || '___________'} e portador(a) do RG nº ${v.rg || '____________'}, de profissão ${v.profissao || 'trabalhador(a)'},`,
+          `DECLARO, para os devidos fins de direito e em consonância com o Artigo 73 do Código Civil Brasileiro ("Ter-se-á por domicílio da pessoa natural, que não tiver residência habitual, o lugar onde for encontrada"), sob as penas da Lei nº 7.115/1983, que:`,
+          `NÃO POSSUO RESIDÊNCIA FIXA OU DOMICÍLIO HABITUAL no presente momento, em virtude de: ${v.motivoTransito || 'constantes deslocamentos e alojamento temporário'}, residindo temporariamente onde me encontro a trabalho.`,
+          `Indico como ponto de referência para comunicações e correspondências: ${v.pontoContato || 'endereço temporário'}, no município de ${city} - ${uf}.`,
+          `Declaro ter ciência das penas de crime de falsidade ideológica (Art. 299 do Código Penal) caso preste declaração inverídica.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Declarante', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante em Trânsito' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'O Código Civil prevê a situação de quem não tem moradia fixa?',
+        answer: 'Sim! O Artigo 73 do Código Civil Brasileiro estabelece expressamente que o domicílio da pessoa que não possui residência fixa é o local onde ela for encontrada.'
+      }
+    ]
+  },
+  {
+    id: 'hipossuficiencia',
+    slug: 'declaracao-de-hipossuficiencia',
+    title: 'Declaração de Hipossuficiência Econômica / Justiça Gratuita',
+    shortTitle: 'Hipossuficiência (Justiça Gratuita)',
+    category: 'renda',
+    badge: 'Art. 98 CPC / Justiça Gratuita',
+    description:
+      'Atesta a insuficiência de recursos financeiros para pagar custas processuais, taxas judiciárias e honorários sem prejuízo do sustento próprio e da família.',
+    whenToUse:
+      'Ações judiciais na Justiça Estadual, Federal ou Trabalhista, Juizados Especiais Cíveis (JEC), atendimento na Defensoria Pública e isenção de taxas cartorárias.',
+    legalBase: 'Art. 98 e 99 da Lei nº 13.105/2015 (CPC), Lei Federal nº 1.060/1950, Art. 5º, LXXIV da CF/88 e Lei Federal nº 7.115/1983.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo do Declarante', type: 'text', placeholder: 'Ex: Maria de Fátima Albuquerque', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG / Órgão Emissor', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nacionalidade', label: 'Nacionalidade', type: 'text', placeholder: 'Brasileira', defaultValue: 'Brasileira', required: true, gridSpan: 'half' },
+      { id: 'estadoCivil', label: 'Estado Civil', type: 'select', options: [
+        { value: 'solteiro(a)', label: 'Solteiro(a)' },
+        { value: 'casado(a)', label: 'Casado(a)' },
+        { value: 'em união estável', label: 'Em união estável' },
+        { value: 'divorciado(a)', label: 'Divorciado(a)' },
+        { value: 'viúvo(a)', label: 'Viúvo(a)' }
+      ], defaultValue: 'solteiro(a)', required: true, gridSpan: 'half' },
+      { id: 'profissao', label: 'Profissão / Ocupação', type: 'text', placeholder: 'Ex: Auxiliar de serviços gerais', required: true, gridSpan: 'half' },
+      { id: 'rendaMensalAprox', label: 'Renda Mensal Líquida Aproximada', type: 'text', placeholder: 'Ex: R$ 1.600,00 ou Não possuo renda fixa', defaultValue: 'R$ 1.500,00', required: true, gridSpan: 'half' },
+      { id: 'orgaoJuizo', label: 'Órgão / Juízo / Vara Destinatária', type: 'text', placeholder: 'Ex: Juizado Especial Cível da Comarca / Defensoria Pública do Estado', required: true, gridSpan: 'full' },
+      { id: 'processoNumero', label: 'Número dos Autos / Processo (se já houver)', type: 'text', placeholder: 'Ex: 0001234-56.2026.8.22.0001 ou Deixar em branco', gridSpan: 'full' },
+      { id: 'logradouro', label: 'Endereço Residencial Completo', type: 'text', placeholder: 'Rua das Flores, 450, Bairro Esperança', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const processoInfo = v.processoNumero && v.processoNumero.trim() ? ` (Processo nº ${v.processoNumero.trim()})` : '';
+      return {
+        title: 'DECLARAÇÃO DE HIPOSSUFICIÊNCIA ECONÔMICA (JUSTIÇA GRATUITA)',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, nacionalidade ${v.nacionalidade || 'brasileira'}, estado civil ${v.estadoCivil || 'solteiro(a)'}, profissão ${v.profissao || 'trabalhador(a)'}, inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpf || '___________'} e portador(a) do RG nº ${v.rg || '____________'}, domiciliado(a) e residente na ${v.logradouro || '________________________'}, município de ${city} - ${uf},`,
+          `DECLARO perante ${v.orgaoJuizo || 'o Poder Judiciário / Defensoria Pública'}${processoInfo}, para todos os fins de direito e sob as expressas cominações da Lei, que:`,
+          `NÃO POSSUO CONDIÇÕES FINANCEIRAS de suportar o pagamento das custas processuais, despesas com emolumentos judiciais, certidões e honorários advocatícios sem gravame severo ou prejuízo do sustento próprio e de minha família, em virtude de minha renda mensal aproximada de ${v.rendaMensalAprox || 'rendimento insuficiente'}.`,
+          `Por tal razão, REQUEIRO a concessão dos benefícios da GRATUIDADE DA JUSTIÇA, em estrita consonância com o Artigo 5º, inciso LXXIV da Constituição Federal de 1988, com os Artigos 98 e 99 da Lei Federal nº 13.105/2015 (Código de Processo Civil) e com a Lei Federal nº 1.060/1950.`,
+          `Declaro estar ciente de que o Artigo 99, § 3º, do CPC estabelece a presunção legal de veracidade da alegação de insuficiência deduzida por pessoa natural, e de que a afirmação falsa enseja responsabilização civil e criminal na forma do Artigo 299 do Código Penal.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Requerente', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante / Requerente da Justiça Gratuita' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem tem direito ao benefício da Justiça Gratuita?',
+        answer: 'Qualquer pessoa física brasileira ou estrangeira com insuficiência de recursos para pagar custas e honorários. Pelo Artigo 99, § 3º do CPC, a declaração de insuficiência assinada pela pessoa natural tem presunção legal de veracidade.'
+      },
+      {
+        question: 'Precisa reconhecer firma em cartório da declaração de hipossuficiência?',
+        answer: 'Não. Pela Lei 13.726/2018 e pelo próprio Código de Processo Civil, a assinatura simples ou eletrônica pelo Gov.br é suficiente para juntada aos autos pelo advogado ou Defensoria Pública.'
+      }
+    ]
+  },
+  {
+    id: 'etnico-racial',
+    slug: 'autodeclaracao-etnico-racial',
+    title: 'Autodeclaração Étnico-Racial (Preto, Pardo ou Indígena)',
+    shortTitle: 'Autodeclaração Étnico-Racial',
+    category: 'escolaridade',
+    badge: 'Lei 12.711 / Cotas Raciais',
+    description:
+      'Declaração oficial e voluntária de pertencimento à população negra (preto ou pardo) ou indígena para bancas de heteroidentificação e cotas.',
+    whenToUse:
+      'Inscrição e matrícula em cotas sociais e raciais no SiSU, Prouni, Institutos Federais, vestibulares e concursos públicos federais (Lei 12.990/14), estaduais e municipais.',
+    legalBase: 'Lei Federal nº 12.711/2012, Lei Federal nº 12.990/2014, Estatuto da Igualdade Racial (Lei nº 12.288/2010) e Portaria Normativa nº 4/2018 MPDG.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo do Candidato(a)', type: 'text', placeholder: 'Ex: Thiago Henrique dos Santos', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG / Órgão Emissor', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'corRaca', label: 'Cor ou Raça Autodeclarada', type: 'select', options: [
+        { value: 'PRETO(A)', label: 'Preto(a)' },
+        { value: 'PARDO(A)', label: 'Pardo(a)' },
+        { value: 'INDÍGENA', label: 'Indígena' }
+      ], defaultValue: 'PARDO(A)', required: true, gridSpan: 'half' },
+      { id: 'etniaIndigena', label: 'Nome da Comunidade / Povo Indígena (se aplicável)', type: 'text', placeholder: 'Ex: Povo Karipuna / Deixar em branco se preto ou pardo', gridSpan: 'half' },
+      { id: 'instituicaoBanca', label: 'Instituição de Ensino / Órgão ou Banca Examinadora', type: 'text', placeholder: 'Ex: Universidade Federal de Rondônia - UNIR / CEBRASPE', required: true, gridSpan: 'full' },
+      { id: 'editalNumero', label: 'Número do Edital / Concurso / Processo Seletivo', type: 'text', placeholder: 'Ex: Edital nº 01/2026 - SiSU / Vestibular', required: true, gridSpan: 'half' },
+      { id: 'cargoOuCurso', label: 'Curso de Graduação ou Cargo Pretendido', type: 'text', placeholder: 'Ex: Medicina / Analista Judiciário', required: true, gridSpan: 'half' },
+      { id: 'logradouro', label: 'Endereço Residencial', type: 'text', placeholder: 'Rua das Oliveiras, 120', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const raca = v.corRaca || 'PARDO(A)';
+      const etniaDet = raca === 'INDÍGENA' && v.etniaIndigena ? ` do povo/comunidade indígena ${v.etniaIndigena}` : '';
+      return {
+        title: 'AUTODECLARAÇÃO ÉTNICO-RACIAL',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpf || '___________'} e portador(a) da Cédula de Identidade RG nº ${v.rg || '____________'}, domiciliado(a) e residente na ${v.logradouro || '________________________'}, município de ${city} - ${uf},`,
+          `Candidato(a) inscrito(a) no Processo Seletivo regido pelo Edital: ${v.editalNumero || 'Edital Vigente'}, concorrendo à vaga de: ${v.cargoOuCurso || 'Vaga Reservada'}, perante a instituição: ${v.instituicaoBanca || 'Banca Examinadora / Instituição de Ensino'},`,
+          `DECLARO SOLENEMENTE, sob as penas da Lei e para fins específicos de concorrência às vagas reservadas para ações afirmativas de políticas de cotas étnico-raciais, que:`,
+          `ME AUTODECLARO PESSOA ${raca}${etniaDet}, nos termos da classificação oficial do Instituto Brasileiro de Geografia e Estatística (IBGE), do Estatuto da Igualdade Racial (Lei nº 12.288/2010) e da legislação aplicável (Lei nº 12.711/2012 e Lei nº 12.990/2014).`,
+          `Declaro estar plenamente ciente de que a presente autodeclaração será submetida à Comissão de Heteroidentificação e que a constatação de falsidade ensejará a eliminação imediata do certame, anulação de matrícula ou exoneração do cargo, sem prejuízo de sanções criminais por falsidade ideológica (Art. 299 do Código Penal).`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Candidato(a)', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante / Candidato(a)' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Quem é considerado pardo para a autodeclaração?',
+        answer: 'De acordo com o IBGE e as comissões de heteroidentificação, pardo é a pessoa que possui fenótipo negro (características físicas como traços faciais, cabelo e tom de pele decorrentes da ancestralidade negra).'
+      },
+      {
+        question: 'A autodeclaração substitui a banca de heteroidentificação?',
+        answer: 'A autodeclaração é o documento inicial obrigatório. Em concursos federais e vestibulares de federais, o candidato também passa por procedimento de verificação presencial ou por teleconferência pela comissão.'
+      }
+    ]
+  },
+  {
+    id: 'veracidade-documentos',
+    slug: 'declaracao-de-veracidade-de-documentos',
+    title: 'Declaração de Veracidade e Autenticidade de Documentos',
+    shortTitle: 'Veracidade de Documentos',
+    category: 'geral',
+    badge: 'Lei 13.726/18 Desburocratização',
+    description:
+      'Atesta sob as penas da lei que as cópias de documentos físicos ou digitais apresentados conferem fielmente com os originais, dispensando cartório.',
+    whenToUse:
+      'Apresentação de documentos em órgãos públicos federais, estaduais, municipais, conselhos profissionais, universidades e bancos com dispensa de firma/cópia autenticada.',
+    legalBase: 'Artigo 3º, inciso II da Lei Federal nº 13.726/2018 (Lei da Desburocratização) e Artigo 299 do Código Penal.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo do Apresentante', type: 'text', placeholder: 'Ex: Carlos Alberto Miranda', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG / Órgão Emissor', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'instituicaoDestino', label: 'Órgão / Empresa / Instituição Destinatária', type: 'text', placeholder: 'Ex: Prefeitura Municipal / Secretaria de Educação / Banco', required: true, gridSpan: 'full' },
+      { id: 'processoOuEdital', label: 'Número de Processo / Protocolo / Matrícula (opcional)', type: 'text', placeholder: 'Ex: Protocolo nº 9876/2026', gridSpan: 'full' },
+      { id: 'documentosRelacionados', label: 'Relação dos Documentos Apresentados', type: 'textarea', placeholder: 'Ex: 1) Cópia da Cédula de Identidade RG e CPF;\n2) Cópia do Comprovante de Residência;\n3) Cópia do Histórico Escolar e Certificado de Conclusão;\n4) Cópia da Certidão de Casamento.', required: true, gridSpan: 'full' },
+      { id: 'logradouro', label: 'Endereço Residencial', type: 'text', placeholder: 'Av. Jorge Teixeira, 1400', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const prot = v.processoOuEdital ? ` (Referência / Protocolo: ${v.processoOuEdital})` : '';
+      return {
+        title: 'DECLARAÇÃO DE VERACIDADE E AUTENTICIDADE DE DOCUMENTOS',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpf || '___________'} e portador(a) do RG nº ${v.rg || '____________'}, domiciliado(a) e residente na ${v.logradouro || '________________________'}, município de ${city} - ${uf},`,
+          `DECLARO, para os devidos fins de direito perante ${v.instituicaoDestino || 'o Órgão / Entidade Destinatária'}${prot}, com fundamento expresso no Artigo 3º, inciso II, da Lei Federal nº 13.726/2018 (Lei da Desburocratização e Simplificação de Atos Administrativos):`,
+          `Que todos os documentos físicos entregues em cópia ou arquivos eletrônicos anexados no formato digital, relacionados a seguir, SÃO CÓPIAS FIÉIS, VERÍDICAS E AUTÊNTICAS de seus respectivos originais, os quais se encontram sob minha posse e guarda para eventual confronto:`,
+          `DOCUMENTOS APRESENTADOS:`,
+          v.documentosRelacionados || 'Documentos pessoais e comprovantes de praxe.',
+          `Declaro ter pleno conhecimento de que a prestação de declaração falsa sujeita o infrator às sanções administrativas e à responsabilização penal pelo crime de falsidade ideológica (Art. 299 do Código Penal), além de cancelamento de quaisquer atos praticados com fundamento nos aludidos documentos.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Declarante', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante / Apresentante' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'A Lei 13.726/2018 realmente dispensa a cópia autenticada?',
+        answer: 'Sim! O Artigo 3º, inciso II da Lei nº 13.726/2018 proíbe órgãos públicos federais, estaduais e municipais de exigirem autenticação de cópia de documento em cartório quando o cidadão apresentar a declaração de autenticidade.'
+      }
+    ]
+  },
+  {
+    id: 'uso-imagem',
+    slug: 'autorizacao-de-uso-de-imagem',
+    title: 'Autorização e Termo de Cessão de Uso de Imagem e Voz',
+    shortTitle: 'Uso de Imagem e Voz',
+    category: 'geral',
+    badge: 'Art. 20 CC / LGPD',
+    description:
+      'Autorização expressa para captação, fixação e veiculação de fotos, vídeos e áudios para fins institucionais, educativos, artísticos ou promocionais.',
+    whenToUse:
+      'Escolas, faculdades, produtoras audiovisuais, empresas, palestras, academias e campanhas de redes sociais, em estrita conformidade com a LGPD e o Código Civil.',
+    legalBase: 'Art. 5º, incisos X e XXVIII da CF/88, Art. 20 do Código Civil (Lei 10.406/2002) e Lei Geral de Proteção de Dados (Lei 13.709/2018).',
+    fields: [
+      { id: 'tipoTitular', label: 'Titular da Imagem', type: 'select', options: [
+        { value: 'em meu próprio nome', label: 'A própria pessoa (maior de 18 anos)' },
+        { value: 'na qualidade de representante legal de menor', label: 'Pai/Mãe/Responsável por menor de idade' }
+      ], defaultValue: 'em meu próprio nome', required: true, gridSpan: 'half' },
+      { id: 'nomeCedente', label: 'Nome Completo do Declarante / Responsável', type: 'text', placeholder: 'Ex: Juliana Castro Guimarães', required: true, gridSpan: 'half' },
+      { id: 'cpfCedente', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgCedente', label: 'RG', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nomeMenor', label: 'Nome do Menor de Idade (se for o caso)', type: 'text', placeholder: 'Ex: Arthur Castro Guimarães (deixar em branco se for você)', gridSpan: 'full' },
+      { id: 'nomeCessionario', label: 'Nome da Empresa / Escola / Produtora Autorizada', type: 'text', placeholder: 'Ex: Colégio Futuro Ltda / Agência Criativa', required: true, gridSpan: 'full' },
+      { id: 'cnpjCessionario', label: 'CNPJ ou CPF do Cessionário', type: 'text', placeholder: '00.000.000/0001-00', required: true, gridSpan: 'half' },
+      { id: 'finalidadeUso', label: 'Finalidade da Utilização da Imagem/Voz', type: 'text', placeholder: 'Ex: Divulgação institucional, redes sociais, website oficial e material educativo', defaultValue: 'Divulgação institucional, redes sociais, website e material educativo', required: true, gridSpan: 'full' },
+      { id: 'prazoVigencia', label: 'Prazo de Vigência da Autorização', type: 'select', options: [
+        { value: 'por prazo indeterminado', label: 'Prazo Indeterminado' },
+        { value: 'pelo prazo de 12 (doze) meses', label: '12 meses (1 ano)' },
+        { value: 'pelo prazo de 24 (vinte e quatro) meses', label: '24 meses (2 anos)' },
+        { value: 'pelo prazo de 5 (cinco) anos', label: '5 anos' }
+      ], defaultValue: 'por prazo indeterminado', required: true, gridSpan: 'half' },
+      { id: 'caraterCessao', label: 'Caráter da Cessão', type: 'select', options: [
+        { value: 'a título gratuito, livre de royalties ou cachê', label: 'Gratuita (sem cachê ou royalties)' },
+        { value: 'vinculada ao contrato de prestação de serviços', label: 'Vinculada a contrato de prestação' }
+      ], defaultValue: 'a título gratuito, livre de royalties ou cachê', required: true, gridSpan: 'half' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const isMenor = v.tipoTitular && v.tipoTitular.includes('menor');
+      const titularTexto = isMenor && v.nomeMenor
+        ? `na qualidade de representante legal e genitor(a) do(a) menor ${v.nomeMenor}`
+        : 'em nome próprio';
+      return {
+        title: 'TERMO DE AUTORIZAÇÃO E CESSÃO DE USO DE IMAGEM E VOZ',
+        body: [
+          `Eu, ${v.nomeCedente || '_______________________'}, portador(a) do RG nº ${v.rgCedente || '____________'} e inscrito(a) no CPF nº ${v.cpfCedente || '___________'}, ${titularTexto},`,
+          `AUTORIZO expressamente a entidade/empresa ${v.nomeCessionario || '_______________________'}, inscrita no CNPJ/CPF sob o nº ${v.cnpjCessionario || '_________________'}, a captar, fixar, reproduzir, editar e veicular minha imagem (e/ou a do menor supramencionado), bem como a respectiva voz, em fotografias, gravações audiovisuais, filmagens e materiais correlatos.`,
+          `A presente concessão destina-se exclusivamente para a finalidade de: ${v.finalidadeUso || 'Divulgação institucional e redes sociais'}, abrangendo publicações em sítios eletrônicos da internet, canais de streaming, redes sociais oficiais, informativos, catálogos e materiais institucionais impressos ou digitais.`,
+          `A cessão dos direitos sobre a imagem e voz é outorgada ${v.caraterCessao || 'a título gratuito, livre de royalties'}, ${v.prazoVigencia || 'por prazo indeterminado'}, renunciando o(a) cedente a qualquer indenização financeira posterior relativa ao uso autorizado, nos termos do Artigo 20 da Lei Federal nº 10.406/2002 e da Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeCedente || 'Nome do Cedente / Responsável', document: `CPF: ${v.cpfCedente || '000.000.000-00'}`, role: isMenor ? 'Responsável Legal do Menor' : 'Cedente / Titular da Imagem' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'É obrigatório ter termo de imagem assinado para postar fotos nas redes sociais?',
+        answer: 'Sim! O Artigo 20 do Código Civil e a LGPD exigem consentimento prévio e expresso do titular (ou dos pais, no caso de crianças) para veiculação pública de fotografias e vídeos, prevenindo passivos indenizatórios.'
+      }
+    ]
+  },
+  {
+    id: 'renda-mei',
+    slug: 'comprovante-de-renda-mei',
+    title: 'Comprovante e Declaração de Renda de Microempreendedor Individual (MEI)',
+    shortTitle: 'Declaração de Renda MEI',
+    category: 'renda',
+    badge: 'LC 123/2006 / Faturamento MEI',
+    description:
+      'Declaração formal do faturamento bruto médio mensal e do rendimento líquido retirado pelo titular do MEI a título de lucro isento e pró-labore.',
+    whenToUse:
+      'Comprovação de rendimentos para abertura de conta corrente, empréstimos bancários, cartões, financiamentos habitacionais (Caixa/MCMV), locação de imóveis e Prouni/CadÚnico.',
+    legalBase: 'Lei Complementar nº 123/2006 (Art. 18-A), Resolução CGSN nº 140/2018, Lei nº 7.115/1983 e Art. 299 do Código Penal.',
+    fields: [
+      { id: 'nomeTitular', label: 'Nome Completo do Titular do MEI', type: 'text', placeholder: 'Ex: Márcio Silveira Batista', required: true, gridSpan: 'full' },
+      { id: 'cpfTitular', label: 'CPF do Titular', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgTitular', label: 'RG', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'razaoSocial', label: 'Razão Social / Nome Empresarial MEI', type: 'text', placeholder: 'Ex: Márcio Silveira Batista 12345678900', required: true, gridSpan: 'full' },
+      { id: 'cnpjMei', label: 'CNPJ do MEI', type: 'text', placeholder: '00.000.000/0001-00', required: true, gridSpan: 'half' },
+      { id: 'atividadePrincipal', label: 'Atividade Principal / Ramo (CNAE)', type: 'text', placeholder: 'Ex: Serviços de manutenção elétrica / Comércio varejista', required: true, gridSpan: 'half' },
+      { id: 'faturamentoBrutoMensal', label: 'Faturamento Bruto Médio Mensal (R$)', type: 'currency', placeholder: 'R$ 5.500,00', required: true, gridSpan: 'half' },
+      { id: 'despesasOperacionais', label: 'Despesas e Custos Operacionais Mensais (R$)', type: 'currency', placeholder: 'R$ 1.500,00', required: true, gridSpan: 'half' },
+      { id: 'rendimentoLiquido', label: 'Rendimento Líquido Médio Mensal Retirado (R$)', type: 'currency', placeholder: 'R$ 4.000,00', required: true, gridSpan: 'half' },
+      { id: 'periodoReferencia', label: 'Período de Referência da Média', type: 'text', placeholder: 'Ex: Últimos 6 meses / Exercício corrente de 2026', defaultValue: 'Últimos 6 meses', required: true, gridSpan: 'half' },
+      { id: 'enderecoEmpresa', label: 'Endereço Comercial / Sede do MEI', type: 'text', placeholder: 'Av. Nações Unidas, 350', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE FATURAMENTO E RENDIMENTO LÍQUIDO DE MEI',
+        body: [
+          `Eu, ${v.nomeTitular || '_______________________'}, titular inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpfTitular || '___________'} e portador(a) do RG nº ${v.rgTitular || '____________'}, na qualidade de titular e responsável legal pelo Microempreendedor Individual:`,
+          `>> RAZÃO SOCIAL: ${v.razaoSocial || 'Microempreendedor Individual'}, CNPJ nº ${v.cnpjMei || '00.000.000/0001-00'}, situado na ${v.enderecoEmpresa || 'endereço sede'}, ${city} - ${uf}, atuando no ramo de: ${v.atividadePrincipal || 'Prestação de Serviços'},`,
+          `DECLARO, para os devidos fins de comprovação de capacidade financeira e renda perante instituições bancárias, imobiliárias, estabelecimentos de crédito ou órgãos públicos, sob as penas da Lei Federal nº 7.115/1983 e do Art. 299 do Código Penal, que no período correspondente a ${v.periodoReferencia || 'últimos meses'}:`,
+          `1. O FATURAMENTO BRUTO MÉDIO MENSAL da empresa totalizou: ${v.faturamentoBrutoMensal || 'R$ 0,00'};`,
+          `2. As DESPESAS OPERACIONAIS MÉDIAS MENSAIS (custos operacionais, insumos e manutenção da atividade) totalizaram: ${v.despesasOperacionais || 'R$ 0,00'};`,
+          `3. O RENDIMENTO LÍQUIDO MÉDIO MENSAL efetivamente retirado por este titular (a título de lucro isento e pró-labore disponível para subsistência familiar) foi de: ${v.rendimentoLiquido || 'R$ 0,00'}.`,
+          `Declaro ainda que o faturamento acumulado no ano-calendário respeita os limites estabelecidos pelo Artigo 18-A da Lei Complementar nº 123/2006.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeTitular || 'Titular do MEI', document: `CPF: ${v.cpfTitular || '000.000.000-00'} | MEI: ${v.cnpjMei || '00.000.000/0001-00'}`, role: 'Microempreendedor Individual Declarante' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Os bancos aceitam essa declaração de renda do MEI?',
+        answer: 'Sim! Como o MEI não é obrigado por lei a manter contabilidade formal nem emitir balanço patrimonial, as instituições financeiras aceitam a declaração assinada pelo titular acompanhada do CCMEI (Certificado da Condição de Microempreendedor Individual) e extratos bancários.'
+      }
+    ]
+  },
+  {
+    id: 'comodato',
+    slug: 'declaracao-de-comodato',
+    title: 'Declaração de Comodato de Imóvel ou Bem (Cessão Gratuita)',
+    shortTitle: 'Declaração de Comodato',
+    category: 'habitacao',
+    badge: 'Arts. 579-585 Código Civil',
+    description:
+      'Formaliza a cessão gratuita e o empréstimo não oneroso de imóvel residencial/comercial ou bem móvel (veículo ou maquinário), fixando deveres e afastando usucapião.',
+    whenToUse:
+      'Cadastros no CRAS, comprovação de gastos no CadÚnico/Bolsa Família, residência médica, cessão de salas comerciais de parentes, tratores, maquinários ou veículos.',
+    legalBase: 'Artigos 579 a 585 da Lei Federal nº 10.406/2002 (Código Civil Brasileiro) e Lei Federal nº 7.115/1983.',
+    fields: [
+      { id: 'nomeComodante', label: 'Nome do Proprietário (Comodante)', type: 'text', placeholder: 'Ex: Antônio Carlos Pereira', required: true, gridSpan: 'half' },
+      { id: 'cpfComodante', label: 'CPF do Proprietário', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgComodante', label: 'RG do Proprietário', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'nomeComodatario', label: 'Nome de Quem Ocupa / Usa o Bem (Comodatário)', type: 'text', placeholder: 'Ex: Fabiana Souza Pereira', required: true, gridSpan: 'half' },
+      { id: 'cpfComodatario', label: 'CPF do Comodatário', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgComodatario', label: 'RG do Comodatário', type: 'text', placeholder: '654321 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'tipoBem', label: 'Espécie de Bem Cedido', type: 'select', options: [
+        { value: 'Imóvel Residencial Urbano (casa/apartamento)', label: 'Imóvel Residencial Urbano' },
+        { value: 'Imóvel Comercial / Sala / Galpão', label: 'Imóvel Comercial / Sala' },
+        { value: 'Imóvel Rural / Sítio / Chácara', label: 'Imóvel Rural / Chácara' },
+        { value: 'Veículo Automotor / Utilitário / Caminhonete', label: 'Veículo Automotor' },
+        { value: 'Máquinas e Equipamentos de Trabalho', label: 'Máquinas e Equipamentos' }
+      ], defaultValue: 'Imóvel Residencial Urbano (casa/apartamento)', required: true, gridSpan: 'half' },
+      { id: 'prazoComodato', label: 'Prazo do Comodato', type: 'select', options: [
+        { value: 'por prazo indeterminado, rescindível mediante prévia notificação', label: 'Prazo Indeterminado' },
+        { value: 'pelo prazo determinado de 12 (doze) meses', label: '12 meses (1 ano)' },
+        { value: 'pelo prazo determinado de 24 (vinte e quatro) meses', label: '24 meses (2 anos)' }
+      ], defaultValue: 'por prazo indeterminado, rescindível mediante prévia notificação', required: true, gridSpan: 'half' },
+      { id: 'descricaoBem', label: 'Endereço Completo do Imóvel ou Descrição do Bem', type: 'text', placeholder: 'Ex: Rua Rio de Janeiro, 1280, Apto 202, Bairro Centro', required: true, gridSpan: 'full' },
+      { id: 'responsabilidadeDespesas', label: 'Responsabilidade por Taxas / Despesas de Consumo', type: 'select', options: [
+        { value: 'O Comodatário assume integralmente as despesas de consumo (água, luz, internet) e taxas ordinárias', label: 'Comodatário paga contas de água/luz/manutenção' },
+        { value: 'O Comodante mantém o pagamento das contas e taxas sob sua responsabilidade', label: 'Comodante mantém o pagamento das despesas' }
+      ], defaultValue: 'O Comodatário assume integralmente as despesas de consumo (água, luz, internet) e taxas ordinárias', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE COMODATO (CESSÃO GRATUITA)',
+        body: [
+          `PELO PRESENTE INSTRUMENTO DE DECLARAÇÃO,`,
+          `DE UM LADO, COMODANTE: ${v.nomeComodante || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfComodante || '___________'} e RG nº ${v.rgComodante || '____________'}, na qualidade de legítimo(a) proprietário(a)/possuidor(a); e`,
+          `DE OUTRO LADO, COMODATÁRIO(A): ${v.nomeComodatario || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfComodatario || '___________'} e RG nº ${v.rgComodatario || '____________'};`,
+          `DECLARAM solenemente, nos termos dos Artigos 579 a 585 da Lei Federal nº 10.406/2002 (Código Civil Brasileiro) e sob as penas da Lei nº 7.115/1983:`,
+          `1. O(A) Comodante CEDE GRATUITAMENTE, a título de comodato não oneroso, ao(à) Comodatário(a), a posse direta do seguinte bem: ${v.tipoBem || 'Imóvel Residencial'}, localizado/identificado em: ${v.descricaoBem || 'endereço do bem'}, para seu uso pessoal e familiar.`,
+          `2. A cessão é outorgada ${v.prazoComodato || 'por prazo indeterminado'}, sem qualquer cobrança de aluguel ou contraprestação pecuniária.`,
+          `3. ${v.responsabilidadeDespesas || 'O comodatário assume as despesas ordinárias de consumo'}, obrigando-se a zelar pela conservação do bem e a restituí-lo quando findo o comodato no estado em que o recebeu.`,
+          `4. Fica expressamente consignado que a presente posse decorre de mera permissão e tolerância gratuita, não gerando posse com ânimo de dono nem ensejando direito a usucapião.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeComodante || 'Nome do Comodante', document: `CPF: ${v.cpfComodante || '000.000.000-00'}`, role: 'Comodante (Proprietário)' },
+          { name: v.nomeComodatario || 'Nome do Comodatário', document: `CPF: ${v.cpfComodatario || '000.000.000-00'}`, role: 'Comodatário (Beneficiário)' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'O comodato evita que a pessoa tome o imóvel por usucapião?',
+        answer: 'Sim! O Artigo 1.208 do Código Civil determina que atos de mera tolerância ou permissão não induzem posse. O termo de comodato é a prova documental mais segura de que o morador não possui intenção de usucapir o imóvel.'
+      }
+    ]
+  },
+  {
+    id: 'anuencia',
+    slug: 'declaracao-de-anuencia',
+    title: 'Declaração de Anuência de Vizinhos e Confrontantes',
+    shortTitle: 'Declaração de Anuência',
+    category: 'habitacao',
+    badge: 'Art. 213 Lei 6.015/73',
+    description:
+      'Manifestação formal e incontestável de vizinho confrontante expressando concordância com obra, muro na divisa, reforma ou retificação de área.',
+    whenToUse:
+      'Exigida por Secretarias Municipais de Obras para liberação de alvará de construção, aprovação de projetos em condomínios e Cartórios de Registro de Imóveis para retificação de divisas.',
+    legalBase: 'Artigo 213, inciso II da Lei Federal nº 6.015/1973 (Lei de Registros Públicos) e Artigos 1.277 a 1.313 do Código Civil Brasileiro.',
+    fields: [
+      { id: 'nomeConfrontante', label: 'Nome do Vizinho Confrontante (Anuente)', type: 'text', placeholder: 'Ex: Roberto Silveira Martins', required: true, gridSpan: 'half' },
+      { id: 'cpfConfrontante', label: 'CPF do Vizinho', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgConfrontante', label: 'RG do Vizinho', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'enderecoImovelVizinho', label: 'Endereço do Imóvel do Vizinho (Lote / Casa)', type: 'text', placeholder: 'Ex: Rua dos Pioneiros, 452 (Lote 12, Quadra 04)', required: true, gridSpan: 'half' },
+      { id: 'nomeRequerente', label: 'Nome do Proprietário da Obra (Requerente)', type: 'text', placeholder: 'Ex: Daniel Alves Pereira', required: true, gridSpan: 'half' },
+      { id: 'cpfRequerente', label: 'CPF do Titular da Obra', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'enderecoImovelObra', label: 'Endereço do Imóvel da Obra / Confrontante', type: 'text', placeholder: 'Ex: Rua dos Pioneiros, 450 (Lote 11, Quadra 04)', required: true, gridSpan: 'full' },
+      { id: 'objetoAnuencia', label: 'Objeto da Concordância / Intervenção', type: 'select', options: [
+        { value: 'construção / reconstrução de muro de arrimo ou muro divisório na linha de divisa entre os lotes', label: 'Construção de muro na linha de divisa' },
+        { value: 'execução de obra / reforma predial com alinhamento na divisa conforme projeto aprovado', label: 'Obra / reforma predial na divisa' },
+        { value: 'retificação administrativa de área, medidas perimétricas e demarcação topográfica de divisas', label: 'Retificação de medidas e divisas (Cartório)' },
+        { value: 'passagem de servidão de tubulação de água, esgoto ou cabeamento subterrâneo', label: 'Servidão de tubulação / cabos subterrâneos' }
+      ], defaultValue: 'construção / reconstrução de muro de arrimo ou muro divisório na linha de divisa entre os lotes', required: true, gridSpan: 'full' },
+      { id: 'detalhesObra', label: 'Especificações ou Observações Adicionais (opcional)', type: 'text', placeholder: 'Ex: Conforme planta técnica e medição realizada pelo engenheiro responsável', gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      const detalhes = v.detalhesObra && v.detalhesObra.trim() ? ` Observação técnica complementar: ${v.detalhesObra.trim()}.` : '';
+      return {
+        title: 'DECLARAÇÃO DE ANUÊNCIA DE VIZINHO CONFRONTANTE',
+        body: [
+          `Eu, ${v.nomeConfrontante || '_______________________'}, inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpfConfrontante || '___________'} e portador(a) do RG nº ${v.rgConfrontante || '____________'}, na condição de legítimo(a) proprietário(a)/possuidor(a) do imóvel confrontante localizado na ${v.enderecoImovelVizinho || 'endereço do vizinho'},`,
+          `DECLARO, para todos os efeitos de direito perante a Prefeitura Municipal, Cartório de Registro de Imóveis, Crea/CAU e demais autoridades administrativas competentes, que:`,
+          `1. Tenho pleno e irrestrito conhecimento da intervenção pretendida pelo(a) confrontante ${v.nomeRequerente || '_______________________'}, inscrito(a) no CPF nº ${v.cpfRequerente || '___________'}, titular do imóvel lindeiro situado na ${v.enderecoImovelObra || 'endereço da obra'};`,
+          `2. MANIFESTO MINHA EXPRESSA E TOTAL ANUÊNCIA E CONCORDÂNCIA com a ${v.objetoAnuencia || 'obra e intervenção na divisa'}, declarando nada ter a opor, reclamar ou embargar quanto às medidas perimétricas, localização das divisas ou método construtivo acordado entre as partes.${detalhes}`,
+          `Por ser a expressão espontânea da verdade, assino a presente declaração.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeConfrontante || 'Nome do Vizinho Anuente', document: `CPF: ${v.cpfConfrontante || '000.000.000-00'}`, role: 'Vizinho Confrontante Anuente' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'A declaração de anuência do vizinho dispensa o alvará da prefeitura?',
+        answer: 'Não. Ela é um dos documentos fundamentais exigidos pela Prefeitura para liberar o alvará de obras limítrofes e pelo Cartório de Registro de Imóveis para averbações de área.'
+      }
+    ]
+  },
+  {
+    id: 'bons-antecedentes',
+    slug: 'declaracao-de-bons-antecedentes',
+    title: 'Declaração de Bons Antecedentes e Idoneidade Moral',
+    shortTitle: 'Bons Antecedentes',
+    category: 'geral',
+    badge: 'Lei 7.115/83 / Idoneidade',
+    description:
+      'Declaração sob as penas da lei atestando reputação ilibada, idoneidade moral e inexistência de condenação criminal transitada em julgado.',
+    whenToUse:
+      'Processos de admissão de trabalho, contratações em empresas, posse em cargos públicos, habilitação em conselhos de classe, entidades beneficentes e federações.',
+    legalBase: 'Lei Federal nº 7.115/1983 (Art. 1º), Artigo 5º, inciso LVII da Constituição Federal e Artigo 299 do Código Penal.',
+    fields: [
+      { id: 'nome', label: 'Nome Completo do Declarante', type: 'text', placeholder: 'Ex: Leonardo Silva Albuquerque', required: true, gridSpan: 'full' },
+      { id: 'cpf', label: 'CPF', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rg', label: 'RG / Órgão Emissor', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'profissao', label: 'Profissão', type: 'text', placeholder: 'Ex: Engenheiro Civil / Administrador', required: true, gridSpan: 'half' },
+      { id: 'estadoCivil', label: 'Estado Civil', type: 'select', options: [
+        { value: 'solteiro(a)', label: 'Solteiro(a)' },
+        { value: 'casado(a)', label: 'Casado(a)' },
+        { value: 'em união estável', label: 'Em união estável' },
+        { value: 'divorciado(a)', label: 'Divorciado(a)' },
+        { value: 'viúvo(a)', label: 'Viúvo(a)' }
+      ], defaultValue: 'solteiro(a)', required: true, gridSpan: 'half' },
+      { id: 'instituicaoDestino', label: 'Empresa / Órgão / Entidade Destinatária', type: 'text', placeholder: 'Ex: Empresa Brasileira de Infraestrutura / Tribunal / Associação', required: true, gridSpan: 'full' },
+      { id: 'finalidade', label: 'Finalidade da Apresentação', type: 'text', placeholder: 'Ex: Processo de admissão funcional / Posse em cargo público / Inscrição em conselho', defaultValue: 'Processo seletivo e admissão funcional', required: true, gridSpan: 'full' },
+      { id: 'logradouro', label: 'Endereço Residencial Completo', type: 'text', placeholder: 'Rua Lauro Sodré, 900', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE BONS ANTECEDENTES E IDONEIDADE MORAL',
+        body: [
+          `Eu, ${v.nome || '_______________________'}, estado civil ${v.estadoCivil || 'solteiro(a)'}, profissão ${v.profissao || 'trabalhador(a)'}, inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${v.cpf || '___________'} e portador(a) da Cédula de Identidade RG nº ${v.rg || '____________'}, domiciliado(a) e residente na ${v.logradouro || '________________________'}, município de ${city} - ${uf},`,
+          `DECLARO, para os devidos fins de direito perante ${v.instituicaoDestino || 'a Instituição Destinatária'}, para fins específicos de ${v.finalidade || 'admissão funcional'}, e com espeque no Artigo 1º da Lei Federal nº 7.115/1983 ("A declaração destinada a fazer prova de vida, residência, pobreza, dependência econômica, homonímia ou bons antecedentes, quando firmada pelo próprio interessado ou por procurador bastante, presume-se verdadeira"):`,
+          `Que possuo CONDUTA ILIBADA, IDONEIDADE MORAL e BONS ANTECEDENTES, não constando em meu desfavor condenação penal transitada em julgado em qualquer instância da Justiça Comum ou Militar, cumprindo integralmente as exigências éticas e legais vigentes.`,
+          `Declaro ter pleno conhecimento de que a prestação de declaração falsa sujeita o declarante às sanções administrativas e à responsabilidade penal tipificada no Artigo 299 do Código Penal (Falsidade Ideológica).`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nome || 'Nome do Declarante', document: `CPF: ${v.cpf || '000.000.000-00'}`, role: 'Declarante' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'A declaração substitui a Certidão de Antecedentes Criminais da Polícia?',
+        answer: 'Para cadastros simples e seleções preliminares de emprego, sim, em virtude da Lei nº 7.115/1983. Já para posse formal em cargos públicos ou portes regulamentados, o órgão poderá requerer concomitantemente a certidão de nada consta emitida gratuitamente pelo site da Polícia Federal e do Tribunal de Justiça.'
+      }
+    ]
+  },
+  {
+    id: 'declaracao-trabalho',
+    slug: 'declaracao-de-trabalho',
+    title: 'Declaração de Trabalho e Vínculo Laboral',
+    shortTitle: 'Declaração de Trabalho',
+    category: 'trabalho',
+    badge: 'Vínculo Laboral / CLT e PJ',
+    description:
+      'Atestado emitido por empregador ou empresa declarando que o profissional exerce suas funções na organização, com jornada, horário e remuneração.',
+    whenToUse:
+      'Comprovação de horário para matrículas e vagas em creches municipais, abono de faltas em faculdades noturnas, solicitação de vale-transporte e abertura de contas.',
+    legalBase: 'Consolidação das Leis do Trabalho (CLT), Lei Federal nº 7.115/1983 e Artigo 299 do Código Penal.',
+    fields: [
+      { id: 'nomeEmpregador', label: 'Nome da Empresa / Razão Social ou Empregador', type: 'text', placeholder: 'Ex: Comercial Norte de Alimentos Ltda', required: true, gridSpan: 'full' },
+      { id: 'cnpjOuCpfEmpregador', label: 'CNPJ ou CPF do Empregador', type: 'text', placeholder: '00.000.000/0001-00', required: true, gridSpan: 'half' },
+      { id: 'cargoResponsavel', label: 'Cargo do Responsável que Assina', type: 'text', placeholder: 'Ex: Gerente de Recursos Humanos / Administrador', defaultValue: 'Gerente de Recursos Humanos', required: true, gridSpan: 'half' },
+      { id: 'nomeTrabalhador', label: 'Nome Completo do Trabalhador(a)', type: 'text', placeholder: 'Ex: Jéssica Maria Ramos', required: true, gridSpan: 'full' },
+      { id: 'cpfTrabalhador', label: 'CPF do Trabalhador(a)', type: 'cpf', placeholder: '000.000.000-00', required: true, gridSpan: 'half' },
+      { id: 'rgTrabalhador', label: 'RG do Trabalhador(a)', type: 'text', placeholder: '123456 SSP/RO', required: true, gridSpan: 'half' },
+      { id: 'funcaoCargo', label: 'Cargo / Função Desempenhada', type: 'text', placeholder: 'Ex: Assistente Administrativo / Vendedora', required: true, gridSpan: 'half' },
+      { id: 'dataAdmissao', label: 'Data de Início das Atividades', type: 'text', placeholder: 'Ex: 10/02/2024', required: true, gridSpan: 'half' },
+      { id: 'diasEHorarioTrabalho', label: 'Jornada e Horário Semanal de Trabalho', type: 'text', placeholder: 'Ex: De segunda a sexta-feira, das 08h00 às 17h00', defaultValue: 'De segunda a sexta-feira, das 08h00 às 17h00', required: true, gridSpan: 'full' },
+      { id: 'tipoVinculo', label: 'Regime de Trabalho', type: 'select', options: [
+        { value: 'empregado(a) com registro e contrato de trabalho regido pela CLT', label: 'Empregado CLT (com registro formal)' },
+        { value: 'prestador(a) regular de serviços autônomo / PJ', label: 'Prestador de Serviços / PJ' },
+        { value: 'colaborador(a) em período de contratação e experiência', label: 'Contratação / Experiência' }
+      ], defaultValue: 'empregado(a) com registro e contrato de trabalho regido pela CLT', required: true, gridSpan: 'half' },
+      { id: 'salarioRemuneracao', label: 'Remuneração / Salário Mensal (R$)', type: 'currency', placeholder: 'R$ 2.400,00', required: true, gridSpan: 'half' },
+      { id: 'enderecoEmpresa', label: 'Endereço da Empresa / Local da Prestação', type: 'text', placeholder: 'Av. Guaporé, 2300, Bairro Lagoa', required: true, gridSpan: 'full' },
+      { id: 'cidade', label: 'Cidade', type: 'text', placeholder: 'Porto Velho', required: true, gridSpan: 'half' },
+      { id: 'estado', label: 'Estado (UF)', type: 'text', placeholder: 'RO', defaultValue: 'RO', required: true, gridSpan: 'half' }
+    ],
+    generateText: (v) => {
+      const city = v.cidade || 'Porto Velho';
+      const uf = v.estado || 'RO';
+      return {
+        title: 'DECLARAÇÃO DE TRABALHO E VÍNCULO LABORAL',
+        body: [
+          `Pela presente declaração, a empresa/empregador(a):`,
+          `>> ${v.nomeEmpregador || 'NOME DA EMPRESA / EMPREGADOR'}, inscrita no CNPJ/CPF sob o nº ${v.cnpjOuCpfEmpregador || '00.000.000/0001-00'}, estabelecida na ${v.enderecoEmpresa || 'endereço da empresa'}, ${city} - ${uf}, neste ato representada por seu(sua) ${v.cargoResponsavel || 'Representante Legal'},`,
+          `DECLARA, para os devidos fins de direito perante estabelecimentos de ensino, creches municipais, faculdades, concessionárias de transporte público ou órgãos judiciais, que:`,
+          `O(A) Sr.(a) ${v.nomeTrabalhador || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpfTrabalhador || '___________'} e portador(a) do RG nº ${v.rgTrabalhador || '____________'}, integra o quadro de colaboradores desta organização na condição de ${v.tipoVinculo || 'colaborador(a)'}, admitido(a) em ${v.dataAdmissao || '__/__/____'}, exercendo a função de:`,
+          `>> CARGO / FUNÇÃO: ${v.funcaoCargo || 'Colaborador(a)'},`,
+          `>> JORNADA DE TRABALHO: ${v.diasEHorarioTrabalho || 'Horário comercial integral'},`,
+          `>> REMUNERAÇÃO MENSAL: ${v.salarioRemuneracao || 'R$ 0,00'}.`,
+          `A presente declaração é a expressão fiel da verdade, assumindo este emitente responsabilidade pelas informações prestadas na forma da Lei.`
+        ],
+        cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
+        signers: [
+          { name: v.nomeEmpregador || 'Nome do Empregador / Empresa', document: `CNPJ/CPF: ${v.cnpjOuCpfEmpregador || '00.000.000/0001-00'}`, role: v.cargoResponsavel || 'Representante Legal da Empresa' }
+        ]
+      };
+    },
+    faqs: [
+      {
+        question: 'Essa declaração serve para conseguir vaga de creche em período integral?',
+        answer: 'Sim! As secretarias de educação municipal exigem comprovação de trabalho dos pais com especificação dos dias e horários para priorização de vagas em creches de período integral.'
+      },
+      {
+        question: 'Quem não tem carteira assinada pode pedir essa declaração ao patrão?',
+        answer: 'Sim! A declaração atesta o fato do trabalho e horário cumprido pelo trabalhador, servindo perante creches, escolas e juizados mesmo quando a carteira ainda está em fase de homologação.'
+      }
+    ]
   }
 ];
+

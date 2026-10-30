@@ -40,10 +40,25 @@
     <meta name="theme-color" content="#042f2e" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Declaração" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Google Search Console Ownership Verification -->
+    <meta name="google-site-verification" content="google-site-verification-declaracaoonline" />
+
+    <!-- Google tag (gtag.js) - Google Analytics Oficial -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SG7VKTG5V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4SG7VKTG5V', {
+        'anonymize_ip': true,
+        'cookie_flags': 'SameSite=None;Secure'
+      });
+    </script>
 
     <!-- Schema.org JSON-LD structured data (Google Rich Results 2026/2027) -->
     <script type="application/ld+json">
@@ -95,6 +110,9 @@
           "operatingSystem": "Web, Android, iOS, Windows, macOS, Linux",
           "browserRequirements": "Requer navegador web com suporte a HTML5",
           "url": "https://declaracaoonline.com.br",
+          "downloadUrl": "https://declaracaoonline.com.br",
+          "installUrl": "https://declaracaoonline.com.br",
+          "isAccessibleForFree": true,
           "softwareVersion": "2.0 (2026)",
           "aggregateRating": {
             "@type": "AggregateRating",
@@ -107,7 +125,8 @@
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "BRL",
-            "category": "Free Online Service"
+            "category": "Free Online Service",
+            "isAccessibleForFree": true
           },
           "featureList": [
             "Declaração de Residência nos moldes da Lei Federal 7.115/83",
@@ -124,6 +143,7 @@
           "@id": "https://declaracaoonline.com.br/#service",
           "name": "Emissão Gratuita de Declarações Civis com Validade Legal",
           "serviceType": "Geração e Formatação de Documentos Civis Oficiais",
+          "isAccessibleForFree": true,
           "provider": {
             "@id": "https://declaracaoonline.com.br/#organization"
           },
@@ -138,7 +158,8 @@
           "offers": {
             "@type": "Offer",
             "price": "0.00",
-            "priceCurrency": "BRL"
+            "priceCurrency": "BRL",
+            "isAccessibleForFree": true
           }
         },
         {
