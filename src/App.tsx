@@ -74,8 +74,17 @@ export default function App() {
   // Handle URL pathname and hash routing (e.g., /declaracao-de-residencia, /residencia, /aviso-legal, #declaracao-de-residencia)
   useEffect(() => {
     const handleLocationChange = () => {
-      const rawPathname = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').trim();
-      const rawHash = window.location.hash.replace(/^#/, '').replace(/\/$/, '').trim();
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectParam = urlParams.get('p') || urlParams.get('redirect');
+      if (redirectParam) {
+        // Clean query string and update history to real path without reloading
+        const cleanPath = redirectParam.startsWith('/') ? redirectParam : `/${redirectParam}`;
+        window.history.replaceState(null, '', cleanPath);
+      }
+
+      const activePath = redirectParam ? redirectParam.replace(/^\//, '') : window.location.pathname.replace(/^\//, '');
+      const rawPathname = activePath.replace(/\/$/, '').trim();
+      const rawHash = window.location.hash.replace(/^#\/?/, '').replace(/\/$/, '').trim();
       const rawRoute = rawPathname || rawHash;
       // Strip optional "declaracoes/" prefix if visited
       const route = rawRoute.replace(/^declaracoes\//, '');

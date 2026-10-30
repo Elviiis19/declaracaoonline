@@ -54,7 +54,7 @@
   /* Set A4 page dimensions with standard legal margins */
   @page {
     size: A4 portrait;
-    margin: 1.2cm 1.5cm;
+    margin: 18mm 20mm 15mm 20mm;
   }
 
   /* Reset body and html completely for print */
@@ -125,6 +125,19 @@
     color: #000000 !important;
     page-break-inside: auto !important;
     break-inside: auto !important;
+    font-family: 'Times New Roman', 'Nimbus Roman', Georgia, serif !important;
+  }
+
+  /* Official Redação Padrão: Paragraphs must be justified with 2cm indentation */
+  .printable-document-container p.hyphens-auto {
+    text-align: justify !important;
+    text-indent: 2cm !important;
+    line-height: 1.7 !important;
+  }
+
+  /* Ensure signature container and signer names are strictly centered */
+  .printable-document-container .text-center {
+    text-align: center !important;
   }
 
   /* Ensure text and borders are strictly pure black for laser/inkjet printing */

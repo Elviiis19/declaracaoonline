@@ -45,16 +45,14 @@ export const DECLARATION_MODELS: DeclarationModel[] = [
       return {
         title: 'DECLARAÇÃO DE RESIDÊNCIA',
         body: [
-          `Eu, ${v.nome || '_______________________'}, nacionalidade ${v.nacionalidade || 'brasileira'}, estado civil ${v.estadoCivil || 'solteiro(a)'}, profissão ${v.profissao || '________________'}, portador(a) da cédula de identidade RG nº ${v.rg || '____________'} e inscrito(a) no CPF sob o nº ${v.cpf || '___________'},`,
-          `DECLARO, para os devidos fins e sob as penas da Lei, especialmente em conformidade com o disposto na Lei Federal nº 7.115, de 29 de agosto de 1983, que ${v.motivo || 'resido no endereço acima especificado'}, situado na:`,
-          `${v.logradouro || '________________________'}, Bairro: ${v.bairro || '__________'}, CEP: ${v.cep || '________'}, na cidade de ${city} - ${uf}.`,
-          `Declaro ainda estar ciente de que a falsidade das informações aqui prestadas configurará crime de falsidade ideológica, previsto no Artigo 299 do Código Penal Brasileiro, sujeitando o infrator às sanções civis, criminais e administrativas cabíveis.`,
-          `Por ser a expressão fiel da verdade, firmo a presente declaração para que surta seus jurídicos e legais efeitos.`
+          `Eu, ${v.nome ? v.nome.toUpperCase() : '_______________________'}, nacionalidade ${v.nacionalidade || 'brasileiro(a)'}, estado civil ${v.estadoCivil || 'solteiro(a)'}, profissão ${v.profissao || '________________'}, portador(a) da cédula de identidade RG nº ${v.rg || '____________'} e inscrito(a) no CPF sob o nº ${v.cpf || '___________'}, DECLARO, para os devidos fins de comprovação e sob as penas da Lei, especialmente em conformidade com o disposto na Lei Federal nº 7.115, de 29 de agosto de 1983, que ${v.motivo || 'resido e tenho domicílio no imóvel situado à'} ${v.logradouro || '________________________'}, Bairro ${v.bairro || '__________'}, CEP ${v.cep || '________'}, no município de ${city} - ${uf}.`,
+          `Declaro, outrossim, estar plenamente ciente de que a falsidade das informações aqui prestadas configurará crime de falsidade ideológica, previsto no Artigo 299 do Código Penal Brasileiro, sujeitando o declarante às sanções penais, civis e administrativas cabíveis.`,
+          `Por ser a expressão fiel da verdade, firmo e assino a presente declaração para que produza todos os seus efeitos jurídicos e legais.`
         ],
         cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
         signers: [
           {
-            name: v.nome || 'Nome do Declarante',
+            name: v.nome ? v.nome.toUpperCase() : 'Nome do Declarante',
             document: `CPF: ${v.cpf || '000.000.000-00'} | RG: ${v.rg || 'Documento'}`,
             role: 'Declarante'
           }
@@ -108,22 +106,19 @@ export const DECLARATION_MODELS: DeclarationModel[] = [
       return {
         title: 'DECLARAÇÃO DE RESIDÊNCIA FIRMADA POR TERCEIRO',
         body: [
-          `Eu, ${v.nomeDono || '_______________________'}, titular do comprovante de endereço deste imóvel, portador(a) do RG nº ${v.rgDono || '____________'} e inscrito(a) no CPF sob o nº ${v.cpfDono || '___________'},`,
-          `DECLARO, sob as penas da Lei nº 7.115/1983 e do Art. 299 do Código Penal Brasileiro, que ${v.nomeMorador || '_______________________'}, inscrito(a) no CPF nº ${v.cpfMorador || '___________'}, na qualidade de ${v.parentesco || 'morador(a)'},`,
-          `RESIDE ATUALMENTE COMIGO no imóvel de minha titularidade, situado no endereço:`,
-          `${v.logradouro || '________________________'}, Bairro: ${v.bairro || '__________'}, CEP: ${v.cep || '________'}, no município de ${city} - ${uf}.`,
-          `Anexo a esta declaração a cópia do comprovante de residência em meu nome (conta de energia, água ou telefone) para comprovação fática.`,
-          `Por ser a expressão límpida da verdade, firmo a presente.`
+          `Eu, ${v.nomeDono ? v.nomeDono.toUpperCase() : '_______________________'}, titular do comprovante de endereço deste imóvel, portador(a) do RG nº ${v.rgDono || '____________'} e inscrito(a) no CPF sob o nº ${v.cpfDono || '___________'}, DECLARO, sob as penas da Lei nº 7.115/1983 e do Artigo 299 do Código Penal Brasileiro, que ${v.nomeMorador ? v.nomeMorador.toUpperCase() : '_______________________'}, inscrito(a) no CPF nº ${v.cpfMorador || '___________'}, na qualidade de ${v.parentesco || 'morador(a)'}, RESIDE ATUALMENTE COMIGO no imóvel de minha titularidade, situado no endereço: ${v.logradouro || '________________________'}, Bairro ${v.bairro || '__________'}, CEP ${v.cep || '________'}, no município de ${city} - ${uf}.`,
+          `Anexo a esta declaração a cópia do comprovante de residência em meu nome (conta de energia, água ou telefone) para a devida comprovação fática perante os órgãos ou entidades solicitantes.`,
+          `Por ser a expressão límpida da verdade, firmo e assino a presente declaração.`
         ],
         cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
         signers: [
           {
-            name: v.nomeDono || 'Nome do Titular do Imóvel',
+            name: v.nomeDono ? v.nomeDono.toUpperCase() : 'Nome do Titular do Imóvel',
             document: `CPF: ${v.cpfDono || '000.000.000-00'}`,
             role: 'Titular do Imóvel / Declarador'
           },
           {
-            name: v.nomeMorador || 'Nome do Residente',
+            name: v.nomeMorador ? v.nomeMorador.toUpperCase() : 'Nome do Residente',
             document: `CPF: ${v.cpfMorador || '000.000.000-00'}`,
             role: 'Morador Declarado'
           }
@@ -166,16 +161,15 @@ export const DECLARATION_MODELS: DeclarationModel[] = [
       return {
         title: 'DECLARAÇÃO DE RENDIMENTOS DE TRABALHADOR AUTÔNOMO',
         body: [
-          `Eu, ${v.nome || '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpf || '___________'}, portador(a) do RG nº ${v.rg || '____________'}, residente e domiciliado(a) na ${v.logradouro || '________________________'}, ${city} - ${uf},`,
-          `DECLARO, para os devidos fins de comprovação de rendimentos e sob as penas da Lei, que exerço a atividade profissional autônoma de ${v.profissao || 'trabalhador(a) autônomo(a)'}, atuando no ramo há aproximadamente ${v.tempoAtividade || 'mais de 1 ano'}, sem vínculo empregatício formal regido pela CLT.`,
+          `Eu, ${v.nome ? v.nome.toUpperCase() : '_______________________'}, inscrito(a) no CPF sob o nº ${v.cpf || '___________'}, portador(a) do RG nº ${v.rg || '____________'}, residente e domiciliado(a) na ${v.logradouro || '________________________'}, no município de ${city} - ${uf}, DECLARO, para os devidos fins de comprovação de rendimentos e sob as penas da Lei, que exerço a atividade profissional autônoma de ${v.profissao || 'trabalhador(a) autônomo(a)'}, atuando no ramo há aproximadamente ${v.tempoAtividade || 'mais de 1 ano'}, sem vínculo empregatício formal regido pela CLT.`,
           `Declaro ainda que obtenho com minha atividade profissional um rendimento médio mensal bruto estimado em ${v.rendaMedia || 'R$ 0,00'}.`,
-          `Declaro ter pleno conhecimento de que prestar declaração falsa perante a administração pública ou privada caracteriza crime de falsidade ideológica (Art. 299 do Código Penal), passível de responsabilização legal.`,
-          `Por ser a expressão verídica dos fatos, firmo a presente declaração.`
+          `Declaro ter pleno conhecimento de que prestar declaração falsa perante a administração pública ou privada caracteriza crime de falsidade ideológica (Artigo 299 do Código Penal Brasileiro), passível de responsabilização cível e criminal.`,
+          `Por ser a expressão verídica dos fatos, firmo a presente declaração para que produza seus jurídicos e legais efeitos.`
         ],
         cityDateLine: `${city} - ${uf}, ${formatBrazilianDate()}.`,
         signers: [
           {
-            name: v.nome || 'Nome do Autônomo',
+            name: v.nome ? v.nome.toUpperCase() : 'Nome do Autônomo',
             document: `CPF: ${v.cpf || '000.000.000-00'}`,
             role: 'Declarante / Trabalhador Autônomo'
           }

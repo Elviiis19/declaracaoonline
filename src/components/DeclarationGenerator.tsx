@@ -167,9 +167,17 @@ export const DeclarationGenerator: React.FC<DeclarationGeneratorProps> = ({
       });
     }
 
-    // 3. Give React 120ms to flush state and render before triggering browser print dialog
+    // 3. Set clean document title during print so browser print headers don't print site URL or taglines
+    const originalTitle = document.title;
+    const content = model.generateText(formValues);
+    document.title = content.title;
+
+    // 4. Give React 120ms to flush state and render before triggering browser print dialog
     setTimeout(() => {
       window.print();
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 1000);
     }, 120);
   };
 
